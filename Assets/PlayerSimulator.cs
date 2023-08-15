@@ -67,12 +67,13 @@ public class PlayerSimulator : MonoBehaviour
 		while (queue.Count > 0)
 		{
 			var item = queue.Dequeue();
+			// update the player state based on the action
 			ApplyMove(item);
 
 			var next = queue.Peek();
 
 			// TODO: Visualiser for Tick() function, add callbaack to store transform
-			playerController.Tick(next.time - item.time);
+			playerController.Tick(next.time - item.time); // simulate being in the updated state until the next event
 			pathPoints.Add(playerController.transform.position);
         }
 
@@ -81,6 +82,7 @@ public class PlayerSimulator : MonoBehaviour
 
 	void ApplyMove(Event ev)
     {
+		// apparently pattern matching has to return something (docs say otherwise)
 		System.Action action = ev switch
 		{
             (EventVerb.Start, PathGen.Verb.Move) => () => playerController.Move = 1.0f,
