@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
 	public float acc = 4f;
     public float gravity = -9.8f;
 
+	private Vector3 velocity = Vector3.zero;
+
     public Transform _transform;
 	private float momentumFac = 0f;
 	private bool isAppliedJump = false;
@@ -18,7 +20,18 @@ public class PlayerController : MonoBehaviour
 
     public void Tick(float deltaTime)
 	{
+		if (Move > 0)
+		{
+			velocity.x = Move;
+        }
 
+		if (Jump)
+		{
+			velocity.y = Move;
+		}
+
+		velocity.y -= gravity * deltaTime;
+		transform.Translate(velocity * deltaTime);
 	}
 
 	public struct PossibilityArc
