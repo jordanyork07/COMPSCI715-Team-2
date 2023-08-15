@@ -135,7 +135,7 @@ public class PathGen : MonoBehaviour
         uiRenderer.points = points;
     }
 
-    void GenerateRegularRhythm(Density density, int length)
+    List<Action> GenerateRegularRhythm(Density density, int length)
     {
         Debug.Log("Generating regular rhythm density=" + density + ", length=" + length);
 
@@ -172,33 +172,29 @@ public class PathGen : MonoBehaviour
 
         }
 
-        var points = new List<Vector2>();
-        foreach (var action in actions)
+        if (uiRenderer)
         {
-            Dump(action);
-            DrawNotch(points, action.startTime);
-            DrawLine(points, action.startTime, action.duration);
+            var points = new List<Vector2>();
+            foreach (var action in actions)
+            {
+                Dump(action);
+                DrawNotch(points, action.startTime);
+                DrawLine(points, action.startTime, action.duration);
+            }
+
+            uiRenderer.points = points;
         }
 
-        uiRenderer.points = points;
+        return actions;
     }
 
-    void GenerateRhythm(Pattern type, Density density, int length)
+    public List<Action> GenerateRhythm(Pattern type, Density density, int length)
     {
-        switch (type)
+        return type switch
         {
-            case Pattern.Regular:
-                GenerateRegularRhythm(density, length);
-                break;
-            case Pattern.Swing:
-                Debug.Log("Generating swing rhythm");
-                break;
-            case Pattern.Random:
-                Debug.Log("Generating random rhythm");
-                break;
-            default:
-                GenerateRegularRhythm(density, length);
-                break;
+            Pattern.Regular => GenerateRegularRhythm(density, length),
+            Pattern.Swing => GenerateRegularRhythm(density, length),
+            _ => GenerateRegularRhythm(density, length),
         };
     }
 
