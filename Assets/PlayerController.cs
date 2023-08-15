@@ -1,76 +1,70 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-// TODO: Get rid of mono behaviour
-public class PlayerController : MonoBehaviour
+public class PlayerController
 {
-	/*
-	stores simulated player state, updated by PlayerSimulator
-	calculates positions between ticks as updates to the Transform
-	*/
+    public Vector3 Position { get; private set; }
 
-	public float acc = 4f;
-    public float gravity = -9.8f;
-
-	private Vector3 velocity = Vector3.zero;
-
-	// update every tick based on player input
-    public Transform _transform;
-
-	
-	private float momentumFac = 0f;
-	// private bool isAppliedJump = false;
-
-	// forward movement? 
-	public float Move { get; set; }
+    public float Move { get; set; }
     public bool Jump { get; set; }
-    public bool IsGrounded { get; set; }
 
-    public void Tick(float deltaTime)
-	{
-		/*
-		Considers the current controller state and updates the transform position
-		to that at the end of deltaTime
+    private Vector3 velocity = Vector3.zero;
 
-		NOTE: updates the velocity & transform
-		TODO: account for accel, move newVelocity up
-		*/
-		Vector3 displacement = Vector3.zero;
+    public float StepResolution = 0.2f;
+    public float JumpForce = 10f;
+    public float MaxJumpTime = 0.5f; // Maximum time the jump button can be held
+    public float Gravity = Physics.gravity.y * 0.8f;
 
-		if (Move > 0f)
-		{
-			velocity.x = Move; // assume instant horizontal accel
+    private float jumpStartTime;
+    private bool isJumping;
+
+    private void InternalTick(float currentTime, float deltaTime)
+    {
+        UpdateMovement();
+        ApplyJump(currentTime);
+        ApplyGravity(deltaTime);
+
+        Position += velocity * StepResolution;
+    }
+
+    public delegate void PushPathVisualiserNode(Vector3 position);
+
+    public void Tick(float currentTime, float deltaTime, PushPathVisualiserNode visDelegate)
+    {
+        float i;
+        for (i = 0; i < deltaTime; i += StepResolution)
+        {
+            currentTime += i;
+            InternalTick(currentTime, StepResolution);
+            visDelegate(this.Position);
         }
 
-		if (IsGrounded)
-		{
-			velocity.y = 0f;
-			return transform.Translate(velocity * deltaTime);
-		}
+        var remainder = deltaTime - i;
+        InternalTick(currentTime, remainder);
+        visDelegate(this.Position);
+    }
 
-		// Player in air for anything below, have to account for velocity diffs
-		// NOTE: ignoring this.appliedJump
-		if (Jump) {
-			velocity.y = 10f; // assume instant vertical accel too
-		}
+    private void ApplyJump(float currentTime)
+    {
+        if (Jump && (!isJumping || currentTime - jumpStartTime <= MaxJumpTime))
+        {
+            velocity.y = JumpForce;
+            jumpStartTime = currentTime;
+            isJumping = true;
+        }
+        else
+        {
+            isJumping = false;
+            jumpStartTime = float.MaxValue;
+        }
+    }
 
-		Vector3 newVelocity = velocity;
-		newVelocity.y -= gravity * deltaTime; // velocity at end of jump
-		
-		Vector3 displacement = (velocity + newVelocity) * deltaTime / 2f;
+    private void UpdateMovement()
+    {
+        velocity.x = Move;
+    }
 
-		transform.Translate(displacement);
-		this.velocity = newVelocity
-	}
-
-	public struct PossibilityArc
-	{
-		Vector3 startPoint;
-	}
-
-    public PossibilityArc SimulateJumpArc()
-	{
-		return new PossibilityArc();
-	}
+    private void ApplyGravity(float deltaTime)
+    {
+        velocity.y += Gravity * deltaTime;
+    }
 }
-

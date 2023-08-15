@@ -4,14 +4,16 @@ using System.Collections.Generic;
 
 public class PlayerSimulator : MonoBehaviour
 {
-	public PlayerController playerController = new();
+	public PlayerController playerController;
 	public PathGen pathGen;
 	public PathFitter pathFitter;
+    public PathFitter pathVis;
 
-	// Use this for initialization
-	void Start()
+    // Use this for initialization
+    void Start()
 	{
-		var actions = pathGen.GenerateRhythm(PathGen.Pattern.Regular, PathGen.Density.Medium, 20);
+		playerController = new PlayerController();
+		var actions = pathGen.GenerateRhythm(PathGen.Pattern.Regular, PathGen.Density.High, 30);
 		SimulateActionList(actions);
 	}
 
@@ -42,8 +44,6 @@ public class PlayerSimulator : MonoBehaviour
 
     void SimulateActionList(List<PathGen.Action> actions)
 	{
-		List<Vector3> pathPoints = new List<Vector3>();
-
         List<Event> events = new();
         foreach (var action in actions)
 		{
@@ -63,21 +63,33 @@ public class PlayerSimulator : MonoBehaviour
 
 		events.Sort((p, q) => p.time.CompareTo(q.time));
 
-		Queue<Event> queue = new(events);
+        List<Vector3> pathPoints = new List<Vector3>();
+        List<Vector3> fitPoints = new List<Vector3>();
+
+        Queue<Event> queue = new(events);
 		while (queue.Count > 0)
 		{
 			var item = queue.Dequeue();
 			// update the player state based on the action
 			ApplyMove(item);
 
-			var next = queue.Peek();
+			if (queue.TryPeek(out var next))
+			{
+                // TODO: Visualiser for Tick() function, add callbaack to store transform
+                playerController.Tick(item.time, (next.time - item.time), (pos) =>
+				{
+					pathPoints.Add(pos);
 
-			// TODO: Visualiser for Tick() function, add callbaack to store transform
-			playerController.Tick(next.time - item.time); // simulate being in the updated state until the next event
-			pathPoints.Add(playerController.transform.position);
+                }); // simulate being in the updated state until the next event
+                fitPoints.Add(playerController.Position);
+            } else
+			{
+				break;
+			}
         }
 
-		pathFitter.path = pathPoints;
+		pathFitter.path = fitPoints;
+        pathVis.path = pathPoints;
     }
 
 	void ApplyMove(Event ev)

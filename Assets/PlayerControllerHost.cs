@@ -3,11 +3,10 @@ using System.Collections;
 
 public class PlayerControllerHost : MonoBehaviour
 {
-	PlayerController playerController;
-
 	// Use this for initialization
 	void Start()
 	{
+        var playerController = new PlayerController();
 		playerController.Jump = Input.GetButton("Jump");
 	}
 

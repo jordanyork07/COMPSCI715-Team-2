@@ -11,6 +11,9 @@ public class PathFitter : MonoBehaviour
     private int propertyHash;
     private List<GameObject> cubes = new();
 
+    public Vector3 cubeScale = new Vector3(1.0f, 1.0f, 1.0f);
+    public Color cubeColor = Color.white;
+
 
     // Start is called before the first frame update
     void Start()
@@ -38,6 +41,8 @@ public class PathFitter : MonoBehaviour
             // Create a cube GameObject
             GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
             cube.transform.parent = transform;
+            cube.transform.localScale = cubeScale;
+            cube.GetComponent<Renderer>().material.color = cubeColor;
             cubes.Add(cube);
 
             // Set the position of the cube
