@@ -2,15 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
+using System.IO;
 
 [ExecuteInEditMode]
 public class PathFitter : MonoBehaviour
 {
-
     public List<Vector3> path;
     private int propertyHash;
-    private List<GameObject> cubes = new();
-
+    private List<GameObject> models = new();  // Updated variable name
 
     // Start is called before the first frame update
     void Start()
@@ -18,32 +18,36 @@ public class PathFitter : MonoBehaviour
 
     }
 
-    void DestroyCubes()
+    void DestroyModels()
     {
-        // Remove any existing cubes
-        cubes.ForEach((cube) =>
+        // Remove any existing models
+        models.ForEach((model) =>
         {
-            DestroyImmediate(cube);
+            DestroyImmediate(model);
         });
 
         // Clear the list record
-        cubes.Clear();
+        models.Clear();
     }
 
-    void AddCubesAtPoints()
+    void AddModelsAtPoints()
     {
-
         foreach (var point in path)
         {
-            // Create a cube GameObject
-            GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            cube.transform.parent = transform;
-            cubes.Add(cube);
+            // Load the "SM_Env_DirtMount_01" prefab from the PolygonAdventure asset
+            GameObject modelPrefab = Resources.Load<GameObject>("SM_Env_DirtMound_01");
 
-            // Set the position of the cube
-            cube.transform.position = point;
-            // You can also set other properties of the cube here if needed
-            // For example, you can set the scale, color, etc.
+            if (modelPrefab != null)
+            {
+                // Instantiate the modelPrefab
+                GameObject model = Instantiate(modelPrefab, point, Quaternion.identity);
+                model.transform.parent = transform;
+                models.Add(model);
+            }
+            else
+            {
+                Debug.LogError("Model prefab not found! Make sure the path is correct.");
+            }
         }
     }
 
@@ -52,7 +56,7 @@ public class PathFitter : MonoBehaviour
     {
         var hash = path.GetHashCode();
 
-        // Get the hashcode of the all path elements
+        // Get the hashcode of all path elements
         path.ForEach((point) =>
         {
             hash += point.GetHashCode();
@@ -62,8 +66,8 @@ public class PathFitter : MonoBehaviour
         if (hash != propertyHash)
         {
             propertyHash = hash;
-            DestroyCubes();
-            AddCubesAtPoints();
+            DestroyModels();
+            AddModelsAtPoints();
         }
     }
 }
