@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
 
     public CharacterController controller;
+    public Animator animator;
 
     public float speed = 12f;
     public float gravity = -20f;
@@ -30,6 +31,25 @@ public class PlayerMovement : MonoBehaviour
 
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
+
+        if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+        {
+            animator.SetTrigger("jog");
+            animator.ResetTrigger("idle");
+            animator.ResetTrigger("jogback");
+        }
+        else if(Input.GetKey(KeyCode.S))
+        {
+            animator.SetTrigger("jogback");
+            animator.ResetTrigger("jog");
+            animator.ResetTrigger("idle");
+        }
+        else
+        {
+            animator.SetTrigger("idle");
+            animator.ResetTrigger("jog");
+            animator.ResetTrigger("jogback");
+        }
 
         Vector3 move = transform.right * x + transform.forward * z;
 
