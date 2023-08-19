@@ -10,7 +10,11 @@ public class PathFitter : MonoBehaviour
 {
     public List<Vector3> path;
     private int propertyHash;
-    private List<GameObject> models = new();  // Updated variable name
+
+    private List<GameObject> models = new();
+
+    public Vector3 modelScale = new Vector3(1.0f, 1.0f, 1.0f);
+    public Color cubeColor = Color.white;
 
     // Start is called before the first frame update
     void Start()
@@ -30,24 +34,23 @@ public class PathFitter : MonoBehaviour
         models.Clear();
     }
 
+    protected virtual GameObject CreateModel()
+    {
+        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        cube.GetComponent<Renderer>().material.color = cubeColor;
+        return cube;
+    }
+
     void AddModelsAtPoints()
     {
         foreach (var point in path)
         {
-            // Load the "SM_Env_DirtMount_01" prefab from the PolygonAdventure asset
-            GameObject modelPrefab = Resources.Load<GameObject>("SM_Env_DirtMound_01");
-
-            if (modelPrefab != null)
-            {
-                // Instantiate the modelPrefab
-                GameObject model = Instantiate(modelPrefab, point, Quaternion.identity);
-                model.transform.parent = transform;
-                models.Add(model);
-            }
-            else
-            {
-                Debug.LogError("Model prefab not found! Make sure the path is correct.");
-            }
+            // Create a GameObject
+            GameObject model = CreateModel();
+            model.transform.parent = transform;
+            model.transform.localScale = modelScale;
+            model.transform.position = point;
+            models.Add(model);            
         }
     }
 
