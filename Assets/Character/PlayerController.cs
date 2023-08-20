@@ -244,7 +244,9 @@ public class PlayerController
             Animator().SetBool(_animIDGrounded, Grounded);
         }
 
-        Grounded = spherePosition.y < 0.5;
+        // TODO: REMOVE THIS (HACK!!!)
+        if (!Grounded)
+            Grounded = spherePosition.y < 0.5;
     }
 
     private void JumpAndGravity()
