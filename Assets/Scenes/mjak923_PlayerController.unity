@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.6381962, g: 0.8875474, b: 0.91593784, a: 1}
+  m_IndirectSpecularColor: {r: 0.6383127, g: 0.88764006, b: 0.9159892, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1258,7 +1258,7 @@ MonoBehaviour:
   - {x: 6, y: 0}
   - {x: 6, y: 0}
   - {x: 7, y: 0}
-  thickness: 4
+  thickness: 2
   scaleX: 30
   scaleY: 20
 --- !u!222 &1420185355
@@ -1707,12 +1707,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bde977e41cf842f5bfd3cf47bc3c12b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathGen: {fileID: 1892220582}
   pathFitter: {fileID: 1949579776}
   pathVis: {fileID: 1962647875}
   simObjectPrefab: {fileID: 8991637339224859442, guid: b888272c1c9264d15a43161d07333cbe, type: 3}
-  density: 1
-  length: 10
 --- !u!4 &1892220584
 Transform:
   m_ObjectHideFlags: 0
@@ -7878,7 +7875,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6152024891017684469}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 26e54e5a728a9234ab24fcf1460ed8a2, type: 3}
   m_Name: 
@@ -8526,6 +8523,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CinemachineCameraTarget: {fileID: 5542111178986571158}
   LockCameraPosition: 0
+  _cinemachineTargetYaw: 0
+  _cinemachineTargetPitch: 0
   TopClamp: 70
   BottomClamp: -30
   CameraAngleOverride: 0
@@ -9088,6 +9087,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CinemachineCameraTarget: {fileID: 1444769381696052471}
   LockCameraPosition: 0
+  _cinemachineTargetYaw: 0
+  _cinemachineTargetPitch: 0
   TopClamp: 70
   BottomClamp: -30
   CameraAngleOverride: 15

@@ -204,13 +204,6 @@ public class PlayerController
             _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude,
                 deltaTime * SpeedChangeRate);
 
-            if (_speed > MoveSpeed)
-            {
-                // TODO: Awful
-                // Debug.Log("oh no :(");
-                _speed = MoveSpeed;
-            }
-
             // round speed to 3 decimal places
             _speed = Mathf.Round(_speed * 1000f) / 1000f;
         }
@@ -241,6 +234,10 @@ public class PlayerController
 
                 // rotate to face input direction relative to camera position
                 Transform().rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+            }
+            else
+            {
+                Debug.Log("Main Camera is null - not rotating!");
             }
         }
 

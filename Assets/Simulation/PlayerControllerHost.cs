@@ -26,8 +26,8 @@ public class PlayerControllerHost : MonoBehaviour
     public bool LockCameraPosition = false;
 
     // cinemachine
-    private float _cinemachineTargetYaw;
-    private float _cinemachineTargetPitch;
+    public float _cinemachineTargetYaw;
+    public float _cinemachineTargetPitch;
 
     [Tooltip("How far in degrees can you move the camera up")]
     public float TopClamp = 70.0f;
