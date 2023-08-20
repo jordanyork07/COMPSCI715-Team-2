@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using static PlayerController;
+using System;
 
 public class PlayerSimulator : MonoBehaviour
 {
@@ -8,12 +10,20 @@ public class PlayerSimulator : MonoBehaviour
 	public PathGen pathGen;
 	public PathFitter pathFitter;
     public PathFitter pathVis;
+	public GameObject simObject;
+
+	public PathGen.Density density = PathGen.Density.Medium;
+	public int length = 20;
+
+	private InputState inputState = new InputState();
+	private InputDelegate GetInputState;
 
     // Use this for initialization
     void Start()
 	{
-		playerController = new PlayerController();
-		var actions = pathGen.GenerateRhythm(PathGen.Pattern.Regular, PathGen.Density.High, 30);
+		GetInputState = () => { return inputState; };
+        playerController = new PlayerController(new LayerMask(), () => simObject.transform, () => null, () => null, GetInputState, () => simObject.GetComponent<CharacterController>());
+		var actions = pathGen.GenerateRhythm(PathGen.Pattern.Regular, density, length);
 		SimulateActionList(actions);
 	}
 
@@ -44,6 +54,8 @@ public class PlayerSimulator : MonoBehaviour
 
     void SimulateActionList(List<PathGen.Action> actions)
 	{
+        Debug.Log(actions);
+
         List<Event> events = new();
         foreach (var action in actions)
 		{
@@ -63,8 +75,12 @@ public class PlayerSimulator : MonoBehaviour
 
 		events.Sort((p, q) => p.time.CompareTo(q.time));
 
+		Debug.Log(events);
+
         List<Vector3> pathPoints = new List<Vector3>();
         List<Vector3> fitPoints = new List<Vector3>();
+
+		playerController.Start();
 
         Queue<Event> queue = new(events);
 		while (queue.Count > 0)
@@ -81,7 +97,9 @@ public class PlayerSimulator : MonoBehaviour
 					pathPoints.Add(pos);
 
                 }); // simulate being in the updated state until the next event
-                fitPoints.Add(playerController.Position);
+
+				if (item.verb == EventVerb.End)
+					fitPoints.Add(playerController.Transform().position);
             } else
 			{
 				break;
@@ -94,17 +112,29 @@ public class PlayerSimulator : MonoBehaviour
 
 	void ApplyMove(Event ev)
     {
-		// apparently pattern matching has to return something (docs say otherwise)
-		System.Action action = ev switch
+        // apparently pattern matching has to return something (docs say otherwise)
+        Action action = ev switch
 		{
-            (EventVerb.Start, PathGen.Verb.Move) => () => playerController.Move = 1.0f,
-            (EventVerb.End, PathGen.Verb.Move) => () => playerController.Move = 0.0f,
-            (EventVerb.Start, PathGen.Verb.Jump) => () => playerController.Jump = true,
-            (EventVerb.End, PathGen.Verb.Jump) => () => playerController.Jump = false,
+			(EventVerb.Start, PathGen.Verb.Move) => () =>
+			{
+				inputState.move = new Vector2(1, 1);
+            },
+			(EventVerb.End, PathGen.Verb.Move) => () =>
+			{
+                inputState.move = new Vector2(0, 0);
+            },
+			(EventVerb.Start, PathGen.Verb.Jump) => () =>
+			{
+                inputState.jump = true;
+            },
+			(EventVerb.End, PathGen.Verb.Jump) => () =>
+			{
+                inputState.jump = false;
+            },
 			_ => () => { }
-        };
+		};
 
 		action();
-    }
+	}
 }
 
