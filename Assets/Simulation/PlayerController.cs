@@ -228,12 +228,19 @@ public class PlayerController
             if (MainCamera() != null)
             {
                 _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
-                                MainCamera().transform.eulerAngles.y;
-                float rotation = Mathf.SmoothDampAngle(Transform().rotation.y, _targetRotation, ref _rotationVelocity,
+                                  MainCamera().transform.eulerAngles.y;
+                float rotation = Mathf.SmoothDampAngle(Transform().eulerAngles.y, _targetRotation, ref _rotationVelocity,
                     RotationSmoothTime);
+
+                var oldRot = Transform().rotation;
 
                 // rotate to face input direction relative to camera position
                 Transform().rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+
+                if (Transform().rotation != oldRot)
+                {
+                    Debug.Log("eeeee");
+                }
             }
             else
             {

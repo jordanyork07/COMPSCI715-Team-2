@@ -121,7 +121,7 @@ public class PlayerControllerHost : MonoBehaviour
 
             _cinemachineTargetYaw += look.x * deltaTimeMultiplier;
             _cinemachineTargetPitch += look.y * deltaTimeMultiplier;
-        }
+        }   
 
         // clamp our rotations so our values are limited 360 degrees
         _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
