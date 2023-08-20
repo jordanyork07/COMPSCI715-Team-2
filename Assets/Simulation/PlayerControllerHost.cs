@@ -105,7 +105,7 @@ public class PlayerControllerHost : MonoBehaviour
         _delegate.Tick(fixedTime, deltaTime, (n) => { }, true);
          
         // Fall prevention
-        if (transform.position.y < -200)
+        if (transform.position.y < -100)
         {
             transform.position = new Vector3(0, 2, -4);
         }

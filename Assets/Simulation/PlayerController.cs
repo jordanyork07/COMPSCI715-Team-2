@@ -167,7 +167,7 @@ public class PlayerController
             }
 
             var remainder = deltaTime - i;
-            if (remainder > 0)
+            if (remainder >= 0)
             {
                 // Debug.Log("dt(r): " + remainder);
                 InternalTick(currentTime, remainder);
@@ -262,9 +262,10 @@ public class PlayerController
 
     private void GroundedCheck()
     {
-        if (IsSimulation && Input().forSimulationSignalGrounded)
+        if (IsSimulation)
         {
-            Grounded = true;
+            if (Input().forSimulationSignalGrounded)
+                Grounded = true;
         }
         else
         {

@@ -1,8 +1,31 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
+
+[CustomEditor(typeof(PathGen))]
+public class PathGenEditor : Editor
+{
+    private PathGen pathGen;
+
+    private void OnEnable()
+    {
+        pathGen = (PathGen)target;
+    }
+
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+
+        if (GUILayout.Button("Generate"))
+        {
+            pathGen.MarkDirty();
+        }
+    }
+}
 
 public class PathGen : MonoBehaviour
 {
@@ -20,7 +43,7 @@ public class PathGen : MonoBehaviour
         Jump
     }
 
-    static float JUMP_FREQUENCY = 0.8f;
+    public float jumpFrequency = 0.8f;
 
     [Serializable]
     public record Action
@@ -53,7 +76,13 @@ public class PathGen : MonoBehaviour
 
     // TODO: Decide on jump variations
     // Short, Long
-    private static float[] jumpLengths = { 0.8f, 1.6f };
+    public float[] jumpLengths = { 0.8f, 1.6f };
+    public Dictionary<Density, float> actionStepMappings = new()
+    {
+        { Density.Low, 3.0f },
+        { Density.Medium, 2.0f },
+        { Density.High, 1.0f },
+    };
 
     Verb chooseRandomVerb()
     {
@@ -98,13 +127,7 @@ public class PathGen : MonoBehaviour
         var lastJumpDuration = 1f; // No jumps in the first second >:(
 
         // Chose spacing between beats
-        float actionStep = density switch
-        {
-            Density.Low => 3.0f,
-            Density.Medium => 2.0f,
-            Density.High => 1.0f,
-            _ => 2.0f
-        };
+        float actionStep = actionStepMappings[density];
 
         List<Action> actions = new List<Action>();
 
@@ -119,7 +142,7 @@ public class PathGen : MonoBehaviour
                 // If last jump is still happening, skip this beat
                 continue;
             }
-            if (UnityEngine.Random.value < JUMP_FREQUENCY)
+            if (UnityEngine.Random.value < jumpFrequency)
             {
                 // Add jump beat
                 lastJumpStartTime = i;
@@ -144,17 +167,11 @@ public class PathGen : MonoBehaviour
     {
         Debug.Log("Generating regular rhythm density=" + density + ", length=" + length);
 
-        var lastJumpStartTime = 0;
-        var lastJumpDuration = 0;
+        var lastJumpStartTime = 0f;
+        var lastJumpDuration = 1f; // No jumps in the first second >:(
 
         // Chose spacing between beats
-        float actionStep = density switch
-        {
-            Density.Low => 8.0f,
-            Density.Medium => 5.0f,
-            Density.High => 2.0f,
-            _ => 5.0f
-        };
+        float actionStep = actionStepMappings[density];
 
         List<Action> actions = new List<Action>();
 
@@ -169,10 +186,12 @@ public class PathGen : MonoBehaviour
                 // If last jump is still happening, skip this beat
                 continue;
             }
-            if (UnityEngine.Random.value < JUMP_FREQUENCY)
+            if (UnityEngine.Random.value < jumpFrequency)
             {
                 // Add jump beat
-                actions.Add(new Action(Verb.Jump, (float)i, jumpLengths[(int)((UnityEngine.Random.value * 13) % 2)]));
+                lastJumpStartTime = i;
+                lastJumpDuration = jumpLengths[(int)((UnityEngine.Random.value * 13) % 2)];
+                actions.Add(new Action(Verb.Jump, (float)lastJumpStartTime, lastJumpDuration));
             }
 
         }
@@ -203,16 +222,32 @@ public class PathGen : MonoBehaviour
         };
     }
 
+    public int GetArrayHash(float[] array)
+    {
+        int hc = array.Length;
+        foreach (int val in array)
+        {
+            hc = unchecked(hc * 314159 + val);
+        }
+
+        return hc;
+    }
+
+    public void MarkDirty()
+    {
+        _actions = GenerateRhythm(pattern, density, length);
+        uiRenderer.SetVerticesDirty();
+    }
+
     public List<Action> GetRhythm()
     {
-        var hash = pattern.GetHashCode() + density.GetHashCode() + length.GetHashCode();
+        var hash = pattern.GetHashCode() + density.GetHashCode() + length.GetHashCode() + jumpFrequency.GetHashCode() + GetArrayHash(jumpLengths);
 
         // Only recreate if something has changed
         if (hash != propertyHash)
         {
             propertyHash = hash;
-            _actions = GenerateRhythm(pattern, density, length);
-            uiRenderer.SetVerticesDirty();
+            MarkDirty();
         }
 
         return _actions;

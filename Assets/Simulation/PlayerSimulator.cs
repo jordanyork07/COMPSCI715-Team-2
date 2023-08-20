@@ -114,8 +114,15 @@ public class PlayerSimulator : MonoBehaviour
 		playerController.Start();
 		
 		// fitPoints.StartAt(new Vector3(0, 0, 0));
-
-        Queue<Event> queue = new(events);
+		
+		// Hack to avoid initial fall
+        Queue<Event> queue = new(events.Prepend(new Event()
+	        {
+		        time = 0,
+		        verb = EventVerb.End,
+		        action = new PathGen.Action(Verb.Jump, 0, 0.5f)
+	        }));
+        
 		while (queue.Count > 0)
 		{
 			var item = queue.Dequeue();
@@ -141,8 +148,8 @@ public class PlayerSimulator : MonoBehaviour
                 var point = playerController.Transform().position;
                 
                 // Start of Jump (why?)
-                // if (playerController.Grounded)
-	               //  fitPoints.StartAt(point);
+                if (playerController.Grounded)
+	                fitPoints.StartAt(point);
 	               
 	            
 			} else
