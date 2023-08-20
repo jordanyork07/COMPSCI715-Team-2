@@ -2,6 +2,7 @@ using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
+using static PlayerController;
 
 namespace StarterAssets
 {
@@ -20,8 +21,20 @@ namespace StarterAssets
 		public bool cursorLocked = true;
 		public bool cursorInputForLook = true;
 
+		public InputState GetInputState()
+		{
+			var actualJump = Input.GetButton("Jump");
+			return new InputState()
+			{
+				move = move,
+				look = look,
+				jump = actualJump,
+				sprint = sprint
+			};
+		}
+
 #if ENABLE_INPUT_SYSTEM
-		public void OnMove(InputValue value)
+        public void OnMove(InputValue value)
 		{
 			MoveInput(value.Get<Vector2>());
 		}

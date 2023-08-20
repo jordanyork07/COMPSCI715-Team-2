@@ -89,7 +89,7 @@ public class PlayerControllerHost : MonoBehaviour
 		Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
 
-        _delegate = new PlayerController(GroundLayers, transform, () => _mainCamera, () => _animator, () => _input, () => _controller);
+        _delegate = new PlayerController(GroundLayers, () => transform, () => _mainCamera, () => _animator, () => _input.GetInputState(), () => _controller);
         _delegate.Start();
     }
 

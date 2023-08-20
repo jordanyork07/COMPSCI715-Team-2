@@ -6,17 +6,19 @@ using static PlayerController;
 
 public class PlayerController
 {
-    //public Vector3 Position { get; private set; }
-    //public Quaternion Rotation { get; private set; }
-
-    public Transform _transform;
-
-    //public float Move { get; set; }
-    //public bool Jump { get; set; }
+    public struct InputState
+    {
+        public Vector2 move;
+        public Vector2 look;
+        public bool jump;
+        public bool sprint;
+        public bool analogMovement;
+    }
 
     [Header("Player")]
     [Tooltip("Move speed of the character in m/s")]
-    public float MoveSpeed = 2.0f;
+    //public float MoveSpeed = 2.0f;
+    public float MoveSpeed = 5.335f;
 
     [Tooltip("Sprint speed of the character in m/s")]
     public float SprintSpeed = 5.335f;
@@ -34,14 +36,15 @@ public class PlayerController
 
     [Space(10)]
     [Tooltip("The height the player can jump")]
-    public float JumpHeight = 3f;
+    public float JumpHeight = 2.0f;
 
     [Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
-    public float Gravity = -15.0f;
+    //public float Gravity = -15.0f;
+    public float Gravity = -9.81f;
 
     [Space(10)]
     [Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
-    public float JumpTimeout = 0.50f;
+    public float JumpTimeout = 0f;
 
     [Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
     public float FallTimeout = 0.15f;
@@ -80,11 +83,14 @@ public class PlayerController
     public delegate Animator AnimatorDelegate();
     public AnimatorDelegate Animator;
 
-    public delegate StarterAssetsInputs InputDelegate();
+    public delegate InputState InputDelegate();
     public InputDelegate Input;
 
     public delegate CharacterController ControllerDelegate();
     public ControllerDelegate Controller;
+
+    public delegate Transform TransformDelegate();
+    public TransformDelegate Transform;
 
     private LayerMask GroundLayers;
 
@@ -98,7 +104,7 @@ public class PlayerController
     private int _animIDFreeFall;
     private int _animIDMotionSpeed;
 
-    public PlayerController(LayerMask groundLayers, Transform transform, MainCameraDelegate mainCamera, AnimatorDelegate animator, InputDelegate input, ControllerDelegate controller)
+    public PlayerController(LayerMask groundLayers, TransformDelegate transform, MainCameraDelegate mainCamera, AnimatorDelegate animator, InputDelegate input, ControllerDelegate controller)
     {
         MainCamera = mainCamera;
         Animator = animator;
@@ -106,7 +112,7 @@ public class PlayerController
         Input = input;
         Controller = controller;
         GroundLayers = groundLayers;
-        _transform = transform;
+        Transform = transform;
     }
 
     public void Start()
@@ -133,7 +139,7 @@ public class PlayerController
         GroundedCheck();
         Move();
 
-        _transform.position += velocity * StepResolution;
+        Transform().position += velocity * StepResolution;
     }
 
     public delegate void PushPathVisualiserNode(Vector3 position);
@@ -145,12 +151,12 @@ public class PlayerController
         {
             currentTime += i;
             InternalTick(currentTime, StepResolution);
-            visDelegate(_transform.position);
+            visDelegate(Transform().position);
         }
 
         var remainder = deltaTime - i;
         InternalTick(currentTime, remainder);
-        visDelegate(_transform.position);
+        visDelegate(Transform().position);
     }
 
     private void Move()
@@ -197,13 +203,16 @@ public class PlayerController
         // if there is a move input rotate player when the player is moving
         if (Input().move != Vector2.zero)
         {
-            _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
+            if (MainCamera() != null)
+            {
+                _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
                                 MainCamera().transform.eulerAngles.y;
-            float rotation = Mathf.SmoothDampAngle(_transform.rotation.y, _targetRotation, ref _rotationVelocity,
-                RotationSmoothTime);
+                float rotation = Mathf.SmoothDampAngle(Transform().rotation.y, _targetRotation, ref _rotationVelocity,
+                    RotationSmoothTime);
 
-            // rotate to face input direction relative to camera position
-            _transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+                // rotate to face input direction relative to camera position
+                Transform().rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+            }
         }
 
 
@@ -224,8 +233,8 @@ public class PlayerController
     private void GroundedCheck()
     {
         // set sphere position, with offset
-        Vector3 spherePosition = new Vector3(_transform.position.x, _transform.position.y - GroundedOffset,
-            _transform.position.z);
+        Vector3 spherePosition = new Vector3(Transform().position.x, Transform().position.y - GroundedOffset,
+            Transform().position.z);
         Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers,
             QueryTriggerInteraction.Ignore);
 
@@ -234,6 +243,8 @@ public class PlayerController
         {
             Animator().SetBool(_animIDGrounded, Grounded);
         }
+
+        Grounded = spherePosition.y < 0.5;
     }
 
     private void JumpAndGravity()
@@ -295,7 +306,8 @@ public class PlayerController
             }
 
             // if we are not grounded, do not jump
-            Input().jump = false;
+            var input = Input();
+            input.jump = false;
         }
 
         // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
@@ -315,7 +327,7 @@ public class PlayerController
 
         // when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
         Gizmos.DrawSphere(
-            new Vector3(_transform.position.x, _transform.position.y - GroundedOffset, _transform.position.z),
+            new Vector3(Transform().position.x, Transform().position.y - GroundedOffset, Transform().position.z),
             GroundedRadius);
     }
 }
