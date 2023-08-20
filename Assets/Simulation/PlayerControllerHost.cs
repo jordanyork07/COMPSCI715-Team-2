@@ -36,7 +36,7 @@ public class PlayerControllerHost : MonoBehaviour
     public float BottomClamp = -30.0f;
 
     [Tooltip("Additional degress to override the camera. Useful for fine tuning camera position when locked")]
-    public float CameraAngleOverride = 0.0f;
+    public float CameraAngleOverride = 15.0f;
 
     [Tooltip("What layers the character uses as ground")]
     public LayerMask GroundLayers;
@@ -99,7 +99,10 @@ public class PlayerControllerHost : MonoBehaviour
 
         var fixedTime = Time.fixedTime;
         var deltaTime = Time.deltaTime;
-        _delegate.Tick(fixedTime, deltaTime, (n) => { });
+        if (_delegate == null)
+            Start();
+
+         _delegate.Tick(fixedTime, deltaTime, (n) => { }, true);
     }
 
     private void LateUpdate()
@@ -109,14 +112,15 @@ public class PlayerControllerHost : MonoBehaviour
 
     private void CameraRotation()
     {
+        var look = _input.GetInputState().look;
         // if there is an input and camera position is not fixed
-        if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
+        if (look.sqrMagnitude >= _threshold && !LockCameraPosition)
         {
             //Don't multiply mouse input by Time.deltaTime;
             float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 
-            _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier;
-            _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier;
+            _cinemachineTargetYaw += look.x * deltaTimeMultiplier;
+            _cinemachineTargetPitch += look.y * deltaTimeMultiplier;
         }
 
         // clamp our rotations so our values are limited 360 degrees
