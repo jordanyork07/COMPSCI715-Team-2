@@ -12,7 +12,7 @@ public class PlayerSimulator : MonoBehaviour
     // Use this for initialization
     void Start()
 	{
-		playerController = new PlayerController();
+		playerController = new PlayerController(new LayerMask(), null, () => null, () => null, () => null, () => null);
 		var actions = pathGen.GenerateRhythm(PathGen.Pattern.Regular, PathGen.Density.High, 30);
 		SimulateActionList(actions);
 	}
@@ -81,7 +81,7 @@ public class PlayerSimulator : MonoBehaviour
 					pathPoints.Add(pos);
 
                 }); // simulate being in the updated state until the next event
-                fitPoints.Add(playerController.Position);
+                fitPoints.Add(playerController._transform.position);
             } else
 			{
 				break;
@@ -94,17 +94,17 @@ public class PlayerSimulator : MonoBehaviour
 
 	void ApplyMove(Event ev)
     {
-		// apparently pattern matching has to return something (docs say otherwise)
-		System.Action action = ev switch
-		{
-            (EventVerb.Start, PathGen.Verb.Move) => () => playerController.Move = 1.0f,
-            (EventVerb.End, PathGen.Verb.Move) => () => playerController.Move = 0.0f,
-            (EventVerb.Start, PathGen.Verb.Jump) => () => playerController.Jump = true,
-            (EventVerb.End, PathGen.Verb.Jump) => () => playerController.Jump = false,
-			_ => () => { }
-        };
+		//// apparently pattern matching has to return something (docs say otherwise)
+		//System.Action action = ev switch
+		//{
+  //          (EventVerb.Start, PathGen.Verb.Move) => () => playerController.Move = 1.0f,
+  //          (EventVerb.End, PathGen.Verb.Move) => () => playerController.Move = 0.0f,
+  //          (EventVerb.Start, PathGen.Verb.Jump) => () => playerController.Jump = true,
+  //          (EventVerb.End, PathGen.Verb.Jump) => () => playerController.Jump = false,
+		//	_ => () => { }
+  //      };
 
-		action();
+		//action();
     }
 }
 
