@@ -102,7 +102,13 @@ public class PlayerControllerHost : MonoBehaviour
         if (_delegate == null)
             Start();
 
-         _delegate.Tick(fixedTime, deltaTime, (n) => { }, true);
+        _delegate.Tick(fixedTime, deltaTime, (n) => { }, true);
+         
+        // Fall prevention
+        if (transform.position.y < -200)
+        {
+            transform.position = new Vector3(0, 2, -4);
+        }
     }
 
     private void LateUpdate()
@@ -119,8 +125,8 @@ public class PlayerControllerHost : MonoBehaviour
             //Don't multiply mouse input by Time.deltaTime;
             float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 
-            _cinemachineTargetYaw += look.x * deltaTimeMultiplier;
-            _cinemachineTargetPitch += look.y * deltaTimeMultiplier;
+            _cinemachineTargetYaw += look.x * deltaTimeMultiplier * 2f;
+            _cinemachineTargetPitch += look.y * deltaTimeMultiplier * 2f;
         }   
 
         // clamp our rotations so our values are limited 360 degrees

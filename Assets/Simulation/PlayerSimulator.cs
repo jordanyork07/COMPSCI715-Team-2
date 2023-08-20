@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using static PlayerController;
 using System;
+using System.Linq;
 using Simulation;
 using UnityEditor;
 using static PathGen;
@@ -112,7 +113,7 @@ public class PlayerSimulator : MonoBehaviour
         playerController.IsSimulation = true;
 		playerController.Start();
 		
-		fitPoints.StartAt(new Vector3(0, 0, 0));
+		// fitPoints.StartAt(new Vector3(0, 0, 0));
 
         Queue<Event> queue = new(events);
 		while (queue.Count > 0)
@@ -123,29 +124,28 @@ public class PlayerSimulator : MonoBehaviour
 
 			if (queue.TryPeek(out var next))
 			{
-                // TODO: Visualiser for Tick() function, add callbaack to store transform
+                // TODO: Visualiser for Tick() function, add callback to store transform
                 playerController.Tick(item.time, (next.time - item.time), (pos) =>
 				{
 					// if (playerController.Grounded)
 					// 	pathPoints.Add(new Vector3(pos.x + 5.0f, pos.y, pos.z));
 					// else
 					pathPoints.Add(pos);
+					
+					if (playerController.Grounded)
+						fitPoints.StartAt(pos);
 
                 }, true); // simulate being in the updated state until the next event
-				
-				// Fitting logic (TODO: Extract out)
-				var point = playerController.Transform().position;
-				if (item.action.verb == Verb.Jump)
-				{
-					if (item.verb == EventVerb.End)
-						fitPoints.EndAt(point);
-					else if (item.verb == EventVerb.Start)
-						fitPoints.StartAt(point);
-					continue;
-				}
-					
-				fitPoints.Put(point);
-            } else
+                
+                // Fitting logic (TODO: Extract out)
+                var point = playerController.Transform().position;
+                
+                // Start of Jump (why?)
+                // if (playerController.Grounded)
+	               //  fitPoints.StartAt(point);
+	               
+	            
+			} else
 			{
 				break;
 			}

@@ -19,6 +19,7 @@ public class PathFitter : MonoBehaviour
     
     public Vector2 minMaxScale = new Vector2(1f, 1f);
     public bool randomiseRotation = true;
+    public float opacity = 1.0f;
 
     // Start is called before the first frame update
     void Start()

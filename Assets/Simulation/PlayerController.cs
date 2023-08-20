@@ -23,7 +23,7 @@ public class PlayerController
     public float MoveSpeed = 5.335f;
 
     [Tooltip("Sprint speed of the character in m/s")]
-    public float SprintSpeed = 5.335f;
+    public float SprintSpeed = 1.6f * 5.335f;
 
     [Tooltip("How fast the character turns to face movement direction")]
     [Range(0.0f, 0.3f)]
@@ -236,15 +236,8 @@ public class PlayerController
                 float rotation = Mathf.SmoothDampAngle(Transform().eulerAngles.y, _targetRotation, ref _rotationVelocity,
                     RotationSmoothTime);
 
-                var oldRot = Transform().rotation;
-
                 // rotate to face input direction relative to camera position
                 Transform().rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
-
-                if (Transform().rotation != oldRot)
-                {
-                    Debug.Log("eeeee");
-                }
             }
             else
             {
