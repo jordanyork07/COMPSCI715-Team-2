@@ -13,6 +13,8 @@ public class PlayerController
         public bool jump;
         public bool sprint;
         public bool analogMovement;
+
+        public bool forSimulationSignalGrounded;
     }
 
     [Header("Player")]
@@ -91,6 +93,8 @@ public class PlayerController
 
     public delegate Transform TransformDelegate();
     public TransformDelegate Transform;
+
+    public bool IsSimulation { get; set; }
 
     private LayerMask GroundLayers;
 
@@ -265,21 +269,24 @@ public class PlayerController
 
     private void GroundedCheck()
     {
-        // set sphere position, with offset
-        Vector3 spherePosition = new Vector3(Transform().position.x, Transform().position.y - GroundedOffset,
-            Transform().position.z);
-        Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers,
-            QueryTriggerInteraction.Ignore);
+        if (IsSimulation && Input().forSimulationSignalGrounded)
+        {
+            Grounded = true;
+        }
+        else
+        {
+            // set sphere position, with offset
+            Vector3 spherePosition = new Vector3(Transform().position.x, Transform().position.y - GroundedOffset,
+                Transform().position.z);
+            Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers,
+                QueryTriggerInteraction.Ignore);   
+        }
 
         // update animator if using character
         if (_hasAnimator)
         {
             Animator().SetBool(_animIDGrounded, Grounded);
         }
-
-        // TODO: REMOVE THIS (HACK!!!)
-        if (!Grounded)
-            Grounded = spherePosition.y < 0.5;
     }
 
     private void JumpAndGravity(float deltaTime)
@@ -312,6 +319,11 @@ public class PlayerController
                 if (_hasAnimator)
                 {
                     Animator().SetBool(_animIDJump, true);
+                }
+                
+                if (IsSimulation)
+                {
+                    Grounded = false; // Awful
                 }
             }
 
@@ -349,6 +361,11 @@ public class PlayerController
         if (_verticalVelocity < _terminalVelocity)
         {
             _verticalVelocity += Gravity * deltaTime;
+        }
+
+        if (IsSimulation && Grounded)
+        {
+            _verticalVelocity = 0;
         }
     }
 

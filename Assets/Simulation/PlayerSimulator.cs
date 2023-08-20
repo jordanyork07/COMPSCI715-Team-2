@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using static PlayerController;
 using System;
+using Simulation;
 using UnityEditor;
 using static PathGen;
 using UnityEngine.UIElements;
@@ -82,6 +83,7 @@ public class PlayerSimulator : MonoBehaviour
 	{
         var simObject = Instantiate(simObjectPrefab, new Vector3(0, 0, 0), Quaternion.identity);
 
+        inputState.forSimulationSignalGrounded = true;
         GetInputState = () => { return inputState; };
         playerController = new PlayerController(new LayerMask(), () => simObject.transform, () => null, () => null, GetInputState, () => simObject.GetComponent<CharacterController>());
 
@@ -105,45 +107,61 @@ public class PlayerSimulator : MonoBehaviour
 		events.Sort((p, q) => p.time.CompareTo(q.time));
 
         List<Vector3> pathPoints = new List<Vector3>();
-        List<Vector3> fitPoints = new List<Vector3>();
+        RleList fitPoints = new RleList();
 
+        playerController.IsSimulation = true;
 		playerController.Start();
+		
+		fitPoints.StartAt(new Vector3(0, 0, 0));
 
         Queue<Event> queue = new(events);
 		while (queue.Count > 0)
 		{
 			var item = queue.Dequeue();
 			// update the player state based on the action
-			ApplyMove(item);
+			ApplyMove(item, playerController);
 
 			if (queue.TryPeek(out var next))
 			{
                 // TODO: Visualiser for Tick() function, add callbaack to store transform
                 playerController.Tick(item.time, (next.time - item.time), (pos) =>
 				{
+					// if (playerController.Grounded)
+					// 	pathPoints.Add(new Vector3(pos.x + 5.0f, pos.y, pos.z));
+					// else
 					pathPoints.Add(pos);
 
                 }, true); // simulate being in the updated state until the next event
-				// TODO: Stepping is broken :(
-
-				if (item.verb == EventVerb.End)
-					fitPoints.Add(playerController.Transform().position);
+				
+				// Fitting logic (TODO: Extract out)
+				var point = playerController.Transform().position;
+				if (item.action.verb == Verb.Jump)
+				{
+					if (item.verb == EventVerb.End)
+						fitPoints.EndAt(point);
+					else if (item.verb == EventVerb.Start)
+						fitPoints.StartAt(point);
+					continue;
+				}
+					
+				fitPoints.Put(point);
             } else
 			{
 				break;
 			}
         }
 
-		pathFitter.path = fitPoints;
+		pathFitter.path = fitPoints.GetPoints();
         pathVis.path = pathPoints;
 
 		DestroyImmediate(simObject);
 		playerController = null;
     }
 
-	void ApplyMove(Event ev)
+	void ApplyMove(Event ev, PlayerController controller)
     {
         // apparently pattern matching has to return something (docs say otherwise)
+        inputState.forSimulationSignalGrounded = false;
         System.Action action = ev switch
 		{
 			(EventVerb.Start, PathGen.Verb.Move) => () =>
@@ -161,7 +179,8 @@ public class PlayerSimulator : MonoBehaviour
 			(EventVerb.End, PathGen.Verb.Jump) => () =>
 			{
                 inputState.jump = false;
-            },
+                inputState.forSimulationSignalGrounded = true;
+			},
 			_ => () => { }
 		};
 

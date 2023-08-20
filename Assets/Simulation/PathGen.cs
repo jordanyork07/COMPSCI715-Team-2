@@ -53,7 +53,7 @@ public class PathGen : MonoBehaviour
 
     // TODO: Decide on jump variations
     // Short, Long
-    private static float[] jumpLengths = { 1.0f, 2.4f };
+    private static float[] jumpLengths = { 0.8f, 1.6f, 2.4f, 3.2f };
 
     Verb chooseRandomVerb()
     {
@@ -94,8 +94,8 @@ public class PathGen : MonoBehaviour
     {
         Debug.Log("Generating regular rhythm density=" + density + ", length=" + length);
 
-        var lastJumpStartTime = 0;
-        var lastJumpDuration = 0;
+        var lastJumpStartTime = 0f;
+        var lastJumpDuration = 0f;
 
         // Chose spacing between beats
         float actionStep = density switch
@@ -122,7 +122,9 @@ public class PathGen : MonoBehaviour
             if (UnityEngine.Random.value < JUMP_FREQUENCY)
             {
                 // Add jump beat
-                actions.Add(new Action(Verb.Jump, (float)i, jumpLengths[(int)((UnityEngine.Random.value * 13) % 2)]));
+                lastJumpStartTime = i;
+                lastJumpDuration = jumpLengths[(int)((UnityEngine.Random.value * 13) % 2)];
+                actions.Add(new Action(Verb.Jump, (float)lastJumpStartTime, lastJumpDuration));
             }
 
         }
