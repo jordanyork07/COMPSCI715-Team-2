@@ -28,6 +28,10 @@ namespace StarterAssets
         [Tooltip("Acceleration and deceleration")]
         public float SpeedChangeRate = 10.0f;
 
+        [Tooltip("Player mouse sensitivity")]
+        public float MouseSensitivity = 2.0f;
+
+
         public AudioClip LandingAudioClip;
         public AudioClip[] FootstepAudioClips;
         [Range(0, 1)] public float FootstepAudioVolume = 0.5f;
@@ -198,8 +202,8 @@ namespace StarterAssets
                 //Don't multiply mouse input by Time.deltaTime;
                 float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 
-                _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier;
-                _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier;
+                _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier * MouseSensitivity;
+                _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier * MouseSensitivity;
             }
 
             // clamp our rotations so our values are limited 360 degrees
