@@ -25,25 +25,27 @@ public class PlayerSimulatorEditor : Editor
 
         if (GUILayout.Button("Generate"))
         {
-            var actions = playerSimulator.pathGen.GenerateRhythm(PathGen.Pattern.Regular, playerSimulator.density, playerSimulator.length);
+	        var actions = playerSimulator.GeneratePath();
             playerSimulator.SimulateActionList(actions);
         }
     }
 }
 
+[RequireComponent(typeof(PathGen))]
 public class PlayerSimulator : MonoBehaviour
 {
 	public PlayerController playerController;
-	public PathGen pathGen;
 	public PathFitter pathFitter;
     public PathFitter pathVis;
 	public GameObject simObjectPrefab;
 
-	public PathGen.Density density = PathGen.Density.Medium;
-	public int length = 20;
-
 	private InputState inputState = new InputState();
 	private InputDelegate GetInputState;
+
+	public List<PathGen.Action> GeneratePath()
+	{
+		return GetComponent<PathGen>().GetRhythm();
+	}
 
     // Use this for initialization
     void Start()

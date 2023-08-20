@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PathGen : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class PathGen : MonoBehaviour
     public Pattern pattern = Pattern.Regular;
     public Density density = Density.High;
     public int length = 20;
+
+    private List<Action> _actions = new();
 
     [Serializable]
     public enum Verb
@@ -198,6 +201,21 @@ public class PathGen : MonoBehaviour
         };
     }
 
+    public List<Action> GetRhythm()
+    {
+        var hash = pattern.GetHashCode() + density.GetHashCode() + length.GetHashCode();
+
+        // Only recreate if something has changed
+        if (hash != propertyHash)
+        {
+            propertyHash = hash;
+            _actions = GenerateRhythm(pattern, density, length);
+            uiRenderer.SetVerticesDirty();
+        }
+
+        return _actions;
+    }
+
     private int propertyHash = 0;
 
     // Start is called before the first frame update
@@ -209,14 +227,6 @@ public class PathGen : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var hash = pattern.GetHashCode() + density.GetHashCode() + length.GetHashCode();
-
-        // Only recreate if something has changed
-        if (hash != propertyHash)
-        {
-            propertyHash = hash;
-            GenerateRhythm(pattern, density, length);
-            uiRenderer.SetVerticesDirty();
-        }
+        GetRhythm();
     }
 }
