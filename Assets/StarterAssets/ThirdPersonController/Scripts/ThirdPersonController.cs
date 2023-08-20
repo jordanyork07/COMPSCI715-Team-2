@@ -29,7 +29,7 @@ namespace StarterAssets
         public float SpeedChangeRate = 10.0f;
 
         [Tooltip("Player mouse sensitivity")]
-        public float MouseSensitivity = 2.0f;
+        public float MouseSensitivity = 5.0f;
 
 
         public AudioClip LandingAudioClip;
