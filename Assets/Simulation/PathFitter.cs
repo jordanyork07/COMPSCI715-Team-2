@@ -20,6 +20,7 @@ public class PathFitter : MonoBehaviour
     public Vector2 minMaxScale = new Vector2(1f, 1f);
     public bool randomiseRotation = true;
     public float opacity = 1.0f;
+    public bool shouldDoCollision = true;
 
     // Start is called before the first frame update
     void Start()
@@ -63,6 +64,10 @@ public class PathFitter : MonoBehaviour
             model.transform.localScale = new Vector3(scale, scale, scale);
             model.transform.rotation = rotation;
             model.transform.position = point;
+
+            if (!shouldDoCollision && model.TryGetComponent<Collider>(out var component))
+                DestroyImmediate(component);
+            
             models.Add(model);            
         }
     }

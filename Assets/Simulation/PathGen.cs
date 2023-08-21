@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 [CustomEditor(typeof(PathGen))]
 public class PathGenEditor : Editor
@@ -119,9 +120,9 @@ public class PathGen : MonoBehaviour
         points.Add(new Vector2(x, y_pos));
     }
 
-    void GenerateRandomRhythm(Density density, int length)
+    List<Action> GenerateRandomRhythm(Density density, int length)
     {
-        Debug.Log("Generating regular rhythm density=" + density + ", length=" + length);
+        Debug.Log("Generating random rhythm density=" + density + ", length=" + length);
 
         var lastJumpStartTime = 0f;
         var lastJumpDuration = 1f; // No jumps in the first second >:(
@@ -135,8 +136,11 @@ public class PathGen : MonoBehaviour
         // TODO: Allow pausing/waiting like in (Smith et al., 2009)
         actions.Add(new Action(Verb.Move, 0, length));
 
-        for (float i = 0; i < length; i += actionStep)
+        float i = 0;
+        while (i < length)
         {
+            var interval = Random.value * actionStep;
+            i += interval;
             if (lastJumpStartTime + lastJumpDuration > i)
             {
                 // If last jump is still happening, skip this beat
@@ -149,18 +153,22 @@ public class PathGen : MonoBehaviour
                 lastJumpDuration = jumpLengths[(int)((UnityEngine.Random.value * 13) % 2)];
                 actions.Add(new Action(Verb.Jump, (float)lastJumpStartTime, lastJumpDuration));
             }
-
         }
 
-        var points = new List<Vector2>();
-        foreach (var action in actions)
+        if (uiRenderer)
         {
-            Dump(action);
-            DrawNotch(points, action.startTime);
-            DrawLine(points, action.startTime, action.duration);
+            var points = new List<Vector2>();
+            foreach (var action in actions)
+            {
+                Dump(action);
+                DrawNotch(points, action.startTime);
+                DrawLine(points, action.startTime, action.duration);
+            }
+
+            uiRenderer.points = points;
         }
 
-        uiRenderer.points = points;
+        return actions;
     }
 
     List<Action> GenerateRegularRhythm(Density density, int length)
@@ -217,6 +225,7 @@ public class PathGen : MonoBehaviour
         return type switch
         {
             Pattern.Regular => GenerateRegularRhythm(density, length),
+            Pattern.Random => GenerateRandomRhythm(density, length),
             Pattern.Swing => GenerateRegularRhythm(density, length),
             _ => GenerateRegularRhythm(density, length),
         };

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.6381905, g: 0.8875656, b: 0.91591376, a: 1}
+  m_IndirectSpecularColor: {r: 0.638335, g: 0.88762844, b: 0.9159842, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1816,6 +1816,7 @@ MonoBehaviour:
   minMaxScale: {x: 0.2, y: 0.4}
   randomiseRotation: 1
   opacity: 1
+  shouldDoCollision: 1
 --- !u!1 &1962647874
 GameObject:
   m_ObjectHideFlags: 0
@@ -1850,6 +1851,7 @@ MonoBehaviour:
   minMaxScale: {x: 0.1, y: 0.1}
   randomiseRotation: 1
   opacity: 1
+  shouldDoCollision: 0
 --- !u!4 &1962647876
 Transform:
   m_ObjectHideFlags: 0
