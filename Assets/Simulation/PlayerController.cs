@@ -66,6 +66,7 @@ public class PlayerController
     public float StepResolution = 0.2f;
     public float JumpForce = 10f;
     public float MaxJumpTime = 0.5f; // Maximum time the jump button can be held
+    private bool canDoubleJump = false;
 
     // player
     private float _speed;
@@ -221,9 +222,23 @@ public class PlayerController
 
         _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, deltaTime * SpeedChangeRate);
         if (_animationBlend < 0.01f) _animationBlend = 0f;
+        // Generate a random angle between -90 and 90 degrees
+        float randomAngle = UnityEngine.Random.Range(-90f, 90f);
+
+        // Convert the angle to radians
+        float radians = randomAngle * Mathf.Deg2Rad;
+
+        // Calculate the x and z components of the vector using trigonometry
+        float x = Mathf.Cos(radians);
+        float z = Mathf.Sin(radians);
 
         // normalise input direction
         Vector3 inputDirection = new Vector3(Input().move.x, 0.0f, Input().move.y).normalized;
+
+        if (IsSimulation)
+        {
+            inputDirection = new Vector3(x, 0.0f, z).normalized;
+        }
 
         // note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
         // if there is a move input rotate player when the player is moving
@@ -246,7 +261,15 @@ public class PlayerController
         }
 
 
-        Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
+        Vector3 direction = Vector3.forward;
+
+        if (IsSimulation)
+        {
+            direction = new Vector3(x, 0f, z);
+        }
+
+        Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * direction;
+
 
         // move the player
         Controller().Move(targetDirection.normalized * (_speed * deltaTime) +
@@ -273,7 +296,13 @@ public class PlayerController
             Vector3 spherePosition = new Vector3(Transform().position.x, Transform().position.y - GroundedOffset,
                 Transform().position.z);
             Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers,
-                QueryTriggerInteraction.Ignore);   
+                QueryTriggerInteraction.Ignore);
+        }
+
+        // Reset double jump when grounded
+        if (Grounded)
+        {
+            canDoubleJump = false;
         }
 
         // update animator if using character
@@ -284,7 +313,14 @@ public class PlayerController
     }
 
     private void JumpAndGravity(float deltaTime)
-    {
+    {   
+        // Double Jump
+        if (Input().jump && canDoubleJump && _verticalVelocity <= 0.0f)
+        {
+            _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+            canDoubleJump = false; // Disable double jump after performing it
+        }
+
         if (Grounded)
         {
             // reset the fall timeout timer
@@ -319,6 +355,7 @@ public class PlayerController
                 {
                     Grounded = false; // Awful
                 }
+                    canDoubleJump = true; // Set canDoubleJump to true after initial jump
             }
 
             // jump timeout
