@@ -11,6 +11,8 @@ public class PlayerController
         public Vector2 move;
         public Vector2 look;
         public bool jump;
+        public bool shouldTurn;
+        public bool doubleJump;
         public bool sprint;
         public bool analogMovement;
 
@@ -141,6 +143,10 @@ public class PlayerController
     private void InternalTick(float currentTime, float deltaTime)
     {
         JumpAndGravity(deltaTime);
+        if (Input().doubleJump)
+        {
+            JumpAndGravity(deltaTime);
+        }
         GroundedCheck();
         Move(deltaTime);
 
@@ -316,7 +322,7 @@ public class PlayerController
     {   
         // Double Jump
         if (Input().jump && canDoubleJump && _verticalVelocity <= 0.0f)
-        {
+        { 
             _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
             canDoubleJump = false; // Disable double jump after performing it
         }

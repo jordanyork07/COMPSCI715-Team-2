@@ -41,7 +41,9 @@ public class PathGen : MonoBehaviour
     public enum Verb
     {
         Move,
-        Jump
+        Jump,
+        DoubleJump
+        
     }
 
     public float jumpFrequency = 0.8f;
@@ -151,7 +153,18 @@ public class PathGen : MonoBehaviour
                 // Add jump beat
                 lastJumpStartTime = i;
                 lastJumpDuration = jumpLengths[(int)((UnityEngine.Random.value * 13) % 2)];
-                actions.Add(new Action(Verb.Jump, (float)lastJumpStartTime, lastJumpDuration));
+                float randomValue = UnityEngine.Random.value;
+
+                if (randomValue < 0.5f)
+                {
+                    actions.Add(new Action(Verb.Jump, (float)lastJumpStartTime, lastJumpDuration));
+
+                }
+                else
+                {
+                    actions.Add(new Action(Verb.DoubleJump, (float)lastJumpStartTime, lastJumpDuration));
+
+                }
             }
         }
 
@@ -199,7 +212,17 @@ public class PathGen : MonoBehaviour
                 // Add jump beat
                 lastJumpStartTime = i;
                 lastJumpDuration = jumpLengths[(int)((UnityEngine.Random.value * 13) % 2)];
-                actions.Add(new Action(Verb.Jump, (float)lastJumpStartTime, lastJumpDuration));
+                float randomValue = UnityEngine.Random.value;
+                if(randomValue < 0.5f)
+                {
+                    actions.Add(new Action(Verb.Jump, (float)lastJumpStartTime, lastJumpDuration));
+
+                }
+                else
+                {
+                    actions.Add(new Action(Verb.DoubleJump, (float)lastJumpStartTime, lastJumpDuration));
+
+                }
             }
 
         }
