@@ -86,6 +86,7 @@ public class PathGen : MonoBehaviour
         { Density.Medium, 2.0f },
         { Density.High, 1.0f },
     };
+    Distribution<float> jumpLengthDist = new DiscreteUniformDistribution<float>(jumpLengths);
 
     Verb chooseRandomVerb()
     {
@@ -120,6 +121,51 @@ public class PathGen : MonoBehaviour
         points.Add(new Vector2(x, y_pos + 1));
         points.Add(new Vector2(x, y_pos + 1));
         points.Add(new Vector2(x, y_pos));
+    }
+
+    void RenderActions(List<Action> actions)
+    {
+        if (!uiRenderer)
+        {
+            return;
+        }
+
+        var points = new List<Vector2>();
+        foreach (var action in actions)
+        {
+            Dump(action);
+            DrawNotch(points, action.startTime);
+            DrawLine(points, action.startTime, action.duration);
+        }
+
+        uiRenderer.points = points;
+    }
+
+    List<Action> GenerateMarkovActions(int length) {
+        Debug.Log("Generating markov actions length=" + length);
+
+        Distribution<float> actionTimeDist = new TriangularDistribution(1f, 2f); // time between actions
+        Distribution<float> jumpDurationDist = new DiscreteUniformDistribution<float>(jumpLengths); // TODO: make different from jumpLengthDist
+
+        List<Action> actions = new List<Action>();
+        actions.Add(new Action(Verb.Move, 0, length)); // initial move action
+        // NOTE: not stopping movement atm
+
+        float time = 0;
+        while (time < length) {
+            float actionTime = actionTimeDist.Sample();
+            time += actionTime;
+
+            if (UnityEngine.Random.value < JUMP_FREQUENCY) {
+                float jumpDuration = jumpDurationDist.Sample();
+                time += jumpDuration;
+
+                actions.Add(new Action(Verb.Jump, time, jumpDuration));
+            }
+        }
+
+        RenderActions(actions);
+        return actions;
     }
 
     List<Action> GenerateRandomRhythm(Density density, int length)
@@ -168,19 +214,7 @@ public class PathGen : MonoBehaviour
             }
         }
 
-        if (uiRenderer)
-        {
-            var points = new List<Vector2>();
-            foreach (var action in actions)
-            {
-                Dump(action);
-                DrawNotch(points, action.startTime);
-                DrawLine(points, action.startTime, action.duration);
-            }
-
-            uiRenderer.points = points;
-        }
-
+        RenderActions(actions);
         return actions;
     }
 
@@ -227,19 +261,7 @@ public class PathGen : MonoBehaviour
 
         }
 
-        if (uiRenderer)
-        {
-            var points = new List<Vector2>();
-            foreach (var action in actions)
-            {
-                Dump(action);
-                DrawNotch(points, action.startTime);
-                DrawLine(points, action.startTime, action.duration);
-            }
-
-            uiRenderer.points = points;
-        }
-
+        RenderActions(actions);
         return actions;
     }
 
