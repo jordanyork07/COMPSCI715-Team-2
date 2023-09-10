@@ -175,6 +175,20 @@ public class PathGen : MonoBehaviour
 
         var lastJumpStartTime = 0f;
         var lastJumpDuration = 1f; // No jumps in the first second >:(
+        Distribution<float> jumpDurationDistribution;
+        switch (density) {
+            case Density.Low:
+                jumpDurationDistribution = new TriangularDistribution(2,3);
+                break;
+            case Density.Medium:
+                jumpDurationDistribution = new TriangularDistribution(1, 2);
+                break;
+            case Density.High:
+            default:
+                jumpDurationDistribution = new TriangularDistribution(0, 1);
+                break;
+        };
+        
 
         // Chose spacing between beats
         float actionStep = actionStepMappings[density];
@@ -199,8 +213,15 @@ public class PathGen : MonoBehaviour
             {
                 // Add jump beat
                 lastJumpStartTime = i;
-                lastJumpDuration = jumpLengths[(int)((UnityEngine.Random.value * 13) % 2)];
+                lastJumpDuration = jumpDurationDistribution.Sample();
                 float randomValue = UnityEngine.Random.value;
+                // NOTE: I think the existing implementation of ryhthm gen is wrong
+                // specify a jump duration is not equivalent to specify the time between jumps
+                // as it is expected for a portion of that to be on the ground?
+                // Although if this is handled by the fittermajig then I am wrong and maybe
+                // the land probability needs modification. will re-examine when energized
+                // or maybe its the fact that the action of jumping has an additional probability before it
+                // hence it isn't truly following the beat
 
                 if (randomValue < 0.5f)
                 {
