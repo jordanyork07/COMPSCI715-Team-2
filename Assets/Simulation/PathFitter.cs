@@ -21,6 +21,28 @@ public class PathFitter : MonoBehaviour
     public bool randomiseRotation = true;
     public float opacity = 1.0f;
     public bool shouldDoCollision = true;
+    public bool animateIn = false;
+    public AnimationCurve AnimationCurve;
+
+    private List<Animatable> _animatables = new();
+
+    private record Animatable
+    {
+        public GameObject target;
+        public Vector3 start;
+        public Vector3 end;
+        public float frameTime;
+        public float finalTime;
+
+        public Animatable(GameObject target, Vector3 start, Vector3 end, float frameTime, float finalTime)
+        {
+            this.target = target;
+            this.start = start;
+            this.end = end;
+            this.finalTime = finalTime;
+            this.frameTime = frameTime;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -67,14 +89,34 @@ public class PathFitter : MonoBehaviour
 
             if (!shouldDoCollision && model.TryGetComponent<Collider>(out var component))
                 DestroyImmediate(component);
-            
-            models.Add(model);            
+
+            models.Add(model);
+
+            if (animateIn)
+            {
+                var position = model.transform.position;
+                var start = position - new Vector3(0, 10f, 0);
+                _animatables.Add(new Animatable(model, start, position, 0, 1.0f));
+                model.transform.position = start;
+            }
         }
     }
 
     // Update is called once per frame
     void Update()
     {
+        foreach (var anim in _animatables.ToArray())
+        {
+            anim.frameTime += Time.deltaTime;
+            var t = Math.Clamp(anim.frameTime / anim.finalTime, 0f, 1f);
+
+            var easing = AnimationCurve.Evaluate(t);
+            anim.target.transform.position = Vector3.Slerp(anim.start, anim.end, easing);
+            
+            if (anim.frameTime >= anim.finalTime)
+                _animatables.Remove(anim);
+        }
+        
         var hash = path.GetHashCode();
 
         // Get the hashcode of all path elements
