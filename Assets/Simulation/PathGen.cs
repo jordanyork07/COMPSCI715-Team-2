@@ -220,13 +220,76 @@ public class PathGen : MonoBehaviour
         return actions;
     }
 
+    List<Action> GenerateSwingRhythm(Density density, int length)
+    {
+        Debug.Log("Generating swing rhythm density=" + density + ", length=" + length);
+
+        var lastJumpStartTime = 0.0;
+        var lastJumpDuration = 0.0;
+
+        // Define the swing ratio (adjust this value based on your desired swing)
+        float swingRatio = 0.6f;  // Example swing ratio
+
+        List<Action> actions = new List<Action>();
+
+        // Add initial move beat for entire duration
+        // TODO: Allow pausing/waiting like in (Smith et al., 2009)
+        actions.Add(new Action(Verb.Move, 0, length));
+
+        float actionStep = density switch
+        {
+            Density.Low => length / 3.0f,
+            Density.Medium => length / 5.0f,
+            Density.High => length / 10.0f,
+            _ => length / 3.0f
+        };
+
+        for (float i = 0; i < length; i += actionStep)
+        {
+            if (lastJumpStartTime + lastJumpDuration > i)
+            {
+                // If last jump is still happening, skip this beat
+                continue;
+            }
+
+            if (UnityEngine.Random.value < jumpFrequency)
+            {
+                // Calculate the duration for the jump beat with swing
+                float swingDuration = actionStep * swingRatio;
+
+                // Add jump beat with swing
+                actions.Add(new Action(Verb.Jump, (float)i, swingDuration));
+
+                // Update last jump start time and duration
+                lastJumpStartTime = i;
+                lastJumpDuration = swingDuration;
+            }
+        }
+
+        if (uiRenderer)
+        {
+            var points = new List<Vector2>();
+            foreach (var action in actions)
+            {
+                Dump(action);
+                DrawNotch(points, action.startTime);
+                DrawLine(points, action.startTime, action.duration);
+            }
+
+            uiRenderer.points = points;
+        }
+
+        return actions;
+    }
+
+
     public List<Action> GenerateRhythm(Pattern type, Density density, int length)
     {
         return type switch
         {
             Pattern.Regular => GenerateRegularRhythm(density, length),
             Pattern.Random => GenerateRandomRhythm(density, length),
-            Pattern.Swing => GenerateRegularRhythm(density, length),
+            Pattern.Swing => GenerateSwingRhythm(density, length),
             _ => GenerateRegularRhythm(density, length),
         };
     }
