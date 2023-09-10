@@ -18,6 +18,7 @@ public class PathFitter : MonoBehaviour
     public Color cubeColor = Color.white;
     
     public Vector2 minMaxScale = new Vector2(1f, 1f);
+    public Vector2 minMaxVerticalRange = new Vector2(1f, 1f);
     public bool randomiseRotation = true;
     public float opacity = 1.0f;
     public bool shouldDoCollision = true;
@@ -76,6 +77,7 @@ public class PathFitter : MonoBehaviour
             // Randomness
             var rotation = Quaternion.identity;
             var scale = Random.Range(minMaxScale.x, minMaxScale.y);
+            var vert = Random.Range(minMaxVerticalRange.x, minMaxVerticalRange.y);
 
             if (randomiseRotation)
                 rotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
@@ -85,7 +87,7 @@ public class PathFitter : MonoBehaviour
             model.transform.parent = transform;
             model.transform.localScale = new Vector3(scale, scale, scale);
             model.transform.rotation = rotation;
-            model.transform.position = point;
+            model.transform.position = point + new Vector3(0f, vert, 0f);
 
             if (!shouldDoCollision && model.TryGetComponent<Collider>(out var component))
                 DestroyImmediate(component);

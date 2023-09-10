@@ -13,7 +13,7 @@ public class ModelPathFitter : PathFitter
 	protected override GameObject CreateModel()
 	{
         // Load the "SM_Env_DirtMount_01" prefab from the PolygonAdventure asset
-        GameObject modelPrefab = Resources.Load<GameObject>("Platform");
+        GameObject modelPrefab = Resources.Load<GameObject>("SM_Env_DirtMound_01");
 
         if (modelPrefab != null)
         {
