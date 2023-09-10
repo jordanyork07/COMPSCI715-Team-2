@@ -39,6 +39,7 @@ public class PlayerSimulator : MonoBehaviour
 	public PlayerController playerController;
 	public PathFitter pathFitter;
     public PathFitter pathVis;
+    public PathFitter areaVis;
 	public GameObject simObjectPrefab;
 
 	private InputState inputState = new InputState();
@@ -79,6 +80,29 @@ public class PlayerSimulator : MonoBehaviour
 			actionVerb = action.verb;
         }
     }
+	
+	private IEnumerable<Vector3> CalculateIntersectingVoxels(GameObject player)
+	{
+		var controller = player.GetComponent<CharacterController>();
+		var playerBounds = controller.bounds;
+		
+		// Iterate through the player's bounding box
+		for (double x = Math.Floor(playerBounds.min.x); x <= Math.Ceiling(playerBounds.max.x); x += 1f)
+		{
+			for (double y = Math.Floor(playerBounds.min.y); y <= Math.Ceiling(playerBounds.max.y); y += 1f)
+			{
+				for (double z = Math.Floor(playerBounds.min.z); z <= Math.Ceiling(playerBounds.max.z); z += 1f)
+				{
+					// Calculate the voxel position
+					Vector3 voxelPosition = new Vector3((int)x, (int)y, (int)z);
+
+					// Add the voxel position to the list
+					yield return voxelPosition;
+				}
+			}
+		}
+	}
+
 
     internal void SimulateActionList(List<PathGen.Action> actions)
 	{
@@ -109,6 +133,7 @@ public class PlayerSimulator : MonoBehaviour
 
         List<Vector3> pathPoints = new List<Vector3>();
         RleList fitPoints = new RleList();
+        HashSet<Vector3> voxelGrid = new HashSet<Vector3>();
 
         playerController.IsSimulation = true;
 		playerController.Start();
@@ -138,6 +163,9 @@ public class PlayerSimulator : MonoBehaviour
 					// 	pathPoints.Add(new Vector3(pos.x + 5.0f, pos.y, pos.z));
 					// else
 					pathPoints.Add(pos);
+
+					var voxels = CalculateIntersectingVoxels(simObject);
+					voxelGrid.UnionWith(voxels);
 					
 					if (playerController.Grounded)
 						fitPoints.StartAt(pos);
@@ -160,6 +188,7 @@ public class PlayerSimulator : MonoBehaviour
 
 		pathFitter.path = fitPoints.GetPoints();
         pathVis.path = pathPoints;
+        areaVis.path = voxelGrid.ToList();
 
 		DestroyImmediate(simObject);
 		playerController = null;

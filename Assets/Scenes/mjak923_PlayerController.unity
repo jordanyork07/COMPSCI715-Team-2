@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.6381559, g: 0.88753307, b: 0.9159111, a: 1}
+  m_IndirectSpecularColor: {r: 0.63814485, g: 0.88750243, b: 0.91587394, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1749,6 +1749,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pathFitter: {fileID: 1949579776}
   pathVis: {fileID: 1962647875}
+  areaVis: {fileID: 2118211869}
   simObjectPrefab: {fileID: 8991637339224859442, guid: b888272c1c9264d15a43161d07333cbe, type: 3}
 --- !u!4 &1892220584
 Transform:
@@ -1765,6 +1766,7 @@ Transform:
   m_Children:
   - {fileID: 1949579775}
   - {fileID: 1962647876}
+  - {fileID: 2118211868}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &1949579773
@@ -1815,7 +1817,7 @@ MonoBehaviour:
   cubeColor: {r: 1, g: 1, b: 1, a: 1}
   minMaxScale: {x: 0.2, y: 0.4}
   randomiseRotation: 1
-  opacity: 1
+  transparent: 0
   shouldDoCollision: 1
   animateIn: 1
   AnimationCurve:
@@ -1842,6 +1844,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  material: {fileID: 2100000, guid: 37c0fd20cac754404afdc0881c032132, type: 2}
 --- !u!1 &1962647874
 GameObject:
   m_ObjectHideFlags: 0
@@ -1875,7 +1878,7 @@ MonoBehaviour:
   cubeColor: {r: 1, g: 0, b: 0, a: 1}
   minMaxScale: {x: 0.1, y: 0.1}
   randomiseRotation: 1
-  opacity: 1
+  transparent: 0
   shouldDoCollision: 0
   animateIn: 0
   AnimationCurve:
@@ -1884,6 +1887,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  material: {fileID: 2100000, guid: 37c0fd20cac754404afdc0881c032132, type: 2}
 --- !u!4 &1962647876
 Transform:
   m_ObjectHideFlags: 0
@@ -2109,6 +2113,64 @@ Transform:
   m_Children: []
   m_Father: {fileID: 580932289}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2118211867
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2118211868}
+  - component: {fileID: 2118211869}
+  m_Layer: 0
+  m_Name: Fitter (Voxel Grid)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2118211868
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118211867}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1892220584}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2118211869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118211867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72d63cb9f810a44ee8940a9fbdd51aca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  path: []
+  cubeColor: {r: 0, g: 0.8721261, b: 1, a: 0.11372549}
+  minMaxScale: {x: 1, y: 1}
+  randomiseRotation: 0
+  transparent: 0
+  shouldDoCollision: 0
+  animateIn: 0
+  AnimationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  material: {fileID: 2100000, guid: 37c0fd20cac754404afdc0881c032132, type: 2}
 --- !u!4 &37121279126410845
 Transform:
   m_ObjectHideFlags: 0
