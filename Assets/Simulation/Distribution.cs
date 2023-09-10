@@ -6,7 +6,21 @@ using UnityEngine;
 public interface Distribution<T>
 {
     T Sample();
-} 
+}
+
+public class IdentityDistribution<T> : Distribution<T>
+{
+    T val;
+    public IdentityDistribution(T val) {
+        this.val = val;
+    }
+
+    public T Sample()
+    {
+        return val;
+    }
+}
+
 public class TriangularDistribution : Distribution<float>
 {
     float lower;

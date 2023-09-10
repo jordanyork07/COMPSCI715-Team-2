@@ -43,7 +43,7 @@ public class PathGen : MonoBehaviour
         Move,
         Jump,
         DoubleJump
-        
+
     }
 
     public float jumpFrequency = 0.8f;
@@ -67,7 +67,8 @@ public class PathGen : MonoBehaviour
     {
         Regular,
         Swing,
-        Random
+        Random,
+        Markov
     }
 
     public enum Density
@@ -86,7 +87,7 @@ public class PathGen : MonoBehaviour
         { Density.Medium, 2.0f },
         { Density.High, 1.0f },
     };
-    Distribution<float> jumpLengthDist = new DiscreteUniformDistribution<float>(jumpLengths);
+    Distribution<float> jumpLengthDist = new DiscreteUniformDistribution<float>(new[] { 0.8f, 1.6f });
 
     Verb chooseRandomVerb()
     {
@@ -156,7 +157,7 @@ public class PathGen : MonoBehaviour
             float actionTime = actionTimeDist.Sample();
             time += actionTime;
 
-            if (UnityEngine.Random.value < JUMP_FREQUENCY) {
+            if (UnityEngine.Random.value < jumpFrequency) {
                 float jumpDuration = jumpDurationDist.Sample();
                 time += jumpDuration;
 
@@ -272,6 +273,7 @@ public class PathGen : MonoBehaviour
             Pattern.Regular => GenerateRegularRhythm(density, length),
             Pattern.Random => GenerateRandomRhythm(density, length),
             Pattern.Swing => GenerateRegularRhythm(density, length),
+            Pattern.Markov => GenerateMarkovActions(length),
             _ => GenerateRegularRhythm(density, length),
         };
     }
