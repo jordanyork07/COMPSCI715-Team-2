@@ -224,45 +224,36 @@ public class PathGen : MonoBehaviour
     {
         Debug.Log("Generating swing rhythm density=" + density + ", length=" + length);
 
-        var lastJumpStartTime = 0.0;
-        var lastJumpDuration = 0.0;
+        var lastJumpStartTime = 0f;
+        var lastJumpDuration = 1f; // No jumps in the first second >:(
 
-        // Define the swing ratio (adjust this value based on your desired swing)
-        float swingRatio = 0.6f;  // Example swing ratio
+        // Chose spacing between beats
+        float actionStep = actionStepMappings[density];
 
         List<Action> actions = new List<Action>();
 
-        // Add initial move beat for entire duration
+        // Add initial move beat for the entire duration
         // TODO: Allow pausing/waiting like in (Smith et al., 2009)
         actions.Add(new Action(Verb.Move, 0, length));
-
-        float actionStep = density switch
-        {
-            Density.Low => length / 3.0f,
-            Density.Medium => length / 5.0f,
-            Density.High => length / 10.0f,
-            _ => length / 3.0f
-        };
 
         for (float i = 0; i < length; i += actionStep)
         {
             if (lastJumpStartTime + lastJumpDuration > i)
             {
-                // If last jump is still happening, skip this beat
+                // If the last jump is still happening, skip this beat
                 continue;
             }
 
             if (UnityEngine.Random.value < jumpFrequency)
             {
-                // Calculate the duration for the jump beat with swing
-                float swingDuration = actionStep * swingRatio;
-
-                // Add jump beat with swing
-                actions.Add(new Action(Verb.Jump, (float)i, swingDuration));
-
-                // Update last jump start time and duration
+                // Add jump beat
                 lastJumpStartTime = i;
+
+                // Calculate the duration for the swing beat
+                float swingDuration = actionStep * (1.5f + UnityEngine.Random.value * 0.5f); // Adjust swing factor as needed
+
                 lastJumpDuration = swingDuration;
+                actions.Add(new Action(Verb.Jump, (float)lastJumpStartTime, lastJumpDuration));
             }
         }
 
@@ -281,7 +272,6 @@ public class PathGen : MonoBehaviour
 
         return actions;
     }
-
 
     public List<Action> GenerateRhythm(Pattern type, Density density, int length)
     {
