@@ -2,6 +2,7 @@
 using static UnityEngine.UI.Image;
 using System.Drawing;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ModelPathFitter : PathFitter
 {

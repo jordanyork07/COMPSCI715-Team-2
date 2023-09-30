@@ -1,7 +1,32 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
+
+[CustomEditor(typeof(PathGen))]
+public class PathGenEditor : Editor
+{
+    private PathGen pathGen;
+
+    private void OnEnable()
+    {
+        pathGen = (PathGen)target;
+    }
+
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+
+        if (GUILayout.Button("Generate"))
+        {
+            pathGen.MarkDirty();
+        }
+    }
+}
 
 public class PathGen : MonoBehaviour
 {
@@ -10,6 +35,8 @@ public class PathGen : MonoBehaviour
     public Density density = Density.High;
     public int length = 20;
 
+    private List<Action> _actions = new();
+
     [Serializable]
     public enum Verb
     {
@@ -17,7 +44,7 @@ public class PathGen : MonoBehaviour
         Jump
     }
 
-    static float JUMP_FREQUENCY = 0.8f;
+    public float jumpFrequency = 0.8f;
 
     [Serializable]
     public record Action
@@ -50,7 +77,13 @@ public class PathGen : MonoBehaviour
 
     // TODO: Decide on jump variations
     // Short, Long
-    private static float[] jumpLengths = { 1.0f, 2.4f };
+    public float[] jumpLengths = { 0.8f, 1.6f };
+    public Dictionary<Density, float> actionStepMappings = new()
+    {
+        { Density.Low, 3.0f },
+        { Density.Medium, 2.0f },
+        { Density.High, 1.0f },
+    };
 
     Verb chooseRandomVerb()
     {
@@ -87,21 +120,15 @@ public class PathGen : MonoBehaviour
         points.Add(new Vector2(x, y_pos));
     }
 
-    void GenerateRandomRhythm(Density density, int length)
+    List<Action> GenerateRandomRhythm(Density density, int length)
     {
-        Debug.Log("Generating regular rhythm density=" + density + ", length=" + length);
+        Debug.Log("Generating random rhythm density=" + density + ", length=" + length);
 
-        var lastJumpStartTime = 0;
-        var lastJumpDuration = 0;
+        var lastJumpStartTime = 0f;
+        var lastJumpDuration = 1f; // No jumps in the first second >:(
 
         // Chose spacing between beats
-        float actionStep = density switch
-        {
-            Density.Low => length / 3.0f,
-            Density.Medium => length / 5.0f,
-            Density.High => length / 10.0f,
-            _ => length / 3.0f
-        };
+        float actionStep = actionStepMappings[density];
 
         List<Action> actions = new List<Action>();
 
@@ -109,47 +136,50 @@ public class PathGen : MonoBehaviour
         // TODO: Allow pausing/waiting like in (Smith et al., 2009)
         actions.Add(new Action(Verb.Move, 0, length));
 
-        for (float i = 0; i < length; i += actionStep)
+        float i = 0;
+        while (i < length)
         {
+            var interval = Random.value * actionStep;
+            i += interval;
             if (lastJumpStartTime + lastJumpDuration > i)
             {
                 // If last jump is still happening, skip this beat
                 continue;
             }
-            if (UnityEngine.Random.value < JUMP_FREQUENCY)
+            if (UnityEngine.Random.value < jumpFrequency)
             {
                 // Add jump beat
-                actions.Add(new Action(Verb.Jump, (float)i, jumpLengths[(int)((UnityEngine.Random.value * 13) % 2)]));
+                lastJumpStartTime = i;
+                lastJumpDuration = jumpLengths[(int)((UnityEngine.Random.value * 13) % 2)];
+                actions.Add(new Action(Verb.Jump, (float)lastJumpStartTime, lastJumpDuration));
+            }
+        }
+
+        if (uiRenderer)
+        {
+            var points = new List<Vector2>();
+            foreach (var action in actions)
+            {
+                Dump(action);
+                DrawNotch(points, action.startTime);
+                DrawLine(points, action.startTime, action.duration);
             }
 
+            uiRenderer.points = points;
         }
 
-        var points = new List<Vector2>();
-        foreach (var action in actions)
-        {
-            Dump(action);
-            DrawNotch(points, action.startTime);
-            DrawLine(points, action.startTime, action.duration);
-        }
-
-        uiRenderer.points = points;
+        return actions;
     }
 
     List<Action> GenerateRegularRhythm(Density density, int length)
     {
         Debug.Log("Generating regular rhythm density=" + density + ", length=" + length);
 
-        var lastJumpStartTime = 0;
-        var lastJumpDuration = 0;
+        var lastJumpStartTime = 0f;
+        var lastJumpDuration = 1f; // No jumps in the first second >:(
 
         // Chose spacing between beats
-        float actionStep = density switch
-        {
-            Density.Low => length / 3.0f,
-            Density.Medium => length / 5.0f,
-            Density.High => length / 10.0f,
-            _ => length / 3.0f
-        };
+        float actionStep = actionStepMappings[density];
 
         List<Action> actions = new List<Action>();
 
@@ -164,10 +194,12 @@ public class PathGen : MonoBehaviour
                 // If last jump is still happening, skip this beat
                 continue;
             }
-            if (UnityEngine.Random.value < JUMP_FREQUENCY)
+            if (UnityEngine.Random.value < jumpFrequency)
             {
                 // Add jump beat
-                actions.Add(new Action(Verb.Jump, (float)i, jumpLengths[(int)((UnityEngine.Random.value * 13) % 2)]));
+                lastJumpStartTime = i;
+                lastJumpDuration = jumpLengths[(int)((UnityEngine.Random.value * 13) % 2)];
+                actions.Add(new Action(Verb.Jump, (float)lastJumpStartTime, lastJumpDuration));
             }
 
         }
@@ -193,9 +225,41 @@ public class PathGen : MonoBehaviour
         return type switch
         {
             Pattern.Regular => GenerateRegularRhythm(density, length),
+            Pattern.Random => GenerateRandomRhythm(density, length),
             Pattern.Swing => GenerateRegularRhythm(density, length),
             _ => GenerateRegularRhythm(density, length),
         };
+    }
+
+    public int GetArrayHash(float[] array)
+    {
+        int hc = array.Length;
+        foreach (int val in array)
+        {
+            hc = unchecked(hc * 314159 + val);
+        }
+
+        return hc;
+    }
+
+    public void MarkDirty()
+    {
+        _actions = GenerateRhythm(pattern, density, length);
+        uiRenderer.SetVerticesDirty();
+    }
+
+    public List<Action> GetRhythm()
+    {
+        var hash = pattern.GetHashCode() + density.GetHashCode() + length.GetHashCode() + jumpFrequency.GetHashCode() + GetArrayHash(jumpLengths);
+
+        // Only recreate if something has changed
+        if (hash != propertyHash)
+        {
+            propertyHash = hash;
+            MarkDirty();
+        }
+
+        return _actions;
     }
 
     private int propertyHash = 0;
@@ -209,14 +273,6 @@ public class PathGen : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var hash = pattern.GetHashCode() + density.GetHashCode() + length.GetHashCode();
-
-        // Only recreate if something has changed
-        if (hash != propertyHash)
-        {
-            propertyHash = hash;
-            GenerateRhythm(pattern, density, length);
-            uiRenderer.SetVerticesDirty();
-        }
+        GetRhythm();
     }
 }

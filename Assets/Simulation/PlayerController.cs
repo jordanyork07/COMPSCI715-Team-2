@@ -13,6 +13,8 @@ public class PlayerController
         public bool jump;
         public bool sprint;
         public bool analogMovement;
+
+        public bool forSimulationSignalGrounded;
     }
 
     [Header("Player")]
@@ -21,7 +23,7 @@ public class PlayerController
     public float MoveSpeed = 5.335f;
 
     [Tooltip("Sprint speed of the character in m/s")]
-    public float SprintSpeed = 5.335f;
+    public float SprintSpeed = 1.6f * 5.335f;
 
     [Tooltip("How fast the character turns to face movement direction")]
     [Range(0.0f, 0.3f)]
@@ -92,6 +94,8 @@ public class PlayerController
     public delegate Transform TransformDelegate();
     public TransformDelegate Transform;
 
+    public bool IsSimulation { get; set; }
+
     private LayerMask GroundLayers;
 
     // host-specific variables (TRY REFACTOR!)
@@ -135,31 +139,50 @@ public class PlayerController
 
     private void InternalTick(float currentTime, float deltaTime)
     {
-        JumpAndGravity();
+        JumpAndGravity(deltaTime);
         GroundedCheck();
-        Move();
+        Move(deltaTime);
 
-        Transform().position += velocity * StepResolution;
+        Transform().position += velocity * deltaTime;
     }
 
     public delegate void PushPathVisualiserNode(Vector3 position);
 
     public void Tick(float currentTime, float deltaTime, PushPathVisualiserNode visDelegate)
     {
-        float i;
-        for (i = 0; i < deltaTime; i += StepResolution)
-        {
-            currentTime += i;
-            InternalTick(currentTime, StepResolution);
-            visDelegate(Transform().position);
-        }
-
-        var remainder = deltaTime - i;
-        InternalTick(currentTime, remainder);
-        visDelegate(Transform().position);
+        Tick(currentTime, deltaTime, visDelegate, false);
     }
 
-    private void Move()
+    public void Tick(float currentTime, float deltaTime, PushPathVisualiserNode visDelegate, bool step)
+    {
+        if (step)
+        {
+            float i;
+            for (i = 0; i + StepResolution < deltaTime; i += StepResolution)
+            {
+                // Debug.Log("dt: " + StepResolution);
+                currentTime += StepResolution;
+                InternalTick(currentTime, StepResolution);
+                visDelegate(Transform().position);
+            }
+
+            var remainder = deltaTime - i;
+            if (remainder >= 0)
+            {
+                // Debug.Log("dt(r): " + remainder);
+                InternalTick(currentTime, remainder);
+                visDelegate(Transform().position);    
+            }
+        }
+        else
+        {
+            InternalTick(currentTime, deltaTime);
+            visDelegate(Transform().position);
+        }
+        
+    }
+
+    private void Move(float deltaTime)
     {
         // set target speed based on move speed, sprint speed and if sprint is pressed
         float targetSpeed = Input().sprint ? SprintSpeed : MoveSpeed;
@@ -183,7 +206,7 @@ public class PlayerController
             // creates curved result rather than a linear one giving a more organic speed change
             // note T in Lerp is clamped, so we don't need to clamp our speed
             _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude,
-                Time.deltaTime * SpeedChangeRate);
+                deltaTime * SpeedChangeRate);
 
             // round speed to 3 decimal places
             _speed = Mathf.Round(_speed * 1000f) / 1000f;
@@ -193,7 +216,10 @@ public class PlayerController
             _speed = targetSpeed;
         }
 
-        _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, Time.deltaTime * SpeedChangeRate);
+        // Debug.Log("Speed: " + _speed);
+        // Debug.Log("Delta Time: " + deltaTime);
+
+        _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, deltaTime * SpeedChangeRate);
         if (_animationBlend < 0.01f) _animationBlend = 0f;
 
         // normalise input direction
@@ -206,12 +232,16 @@ public class PlayerController
             if (MainCamera() != null)
             {
                 _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
-                                MainCamera().transform.eulerAngles.y;
-                float rotation = Mathf.SmoothDampAngle(Transform().rotation.y, _targetRotation, ref _rotationVelocity,
+                                  MainCamera().transform.eulerAngles.y;
+                float rotation = Mathf.SmoothDampAngle(Transform().eulerAngles.y, _targetRotation, ref _rotationVelocity,
                     RotationSmoothTime);
 
                 // rotate to face input direction relative to camera position
                 Transform().rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+            }
+            else
+            {
+                Debug.Log("Main Camera is null - not rotating!");
             }
         }
 
@@ -219,8 +249,8 @@ public class PlayerController
         Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
 
         // move the player
-        Controller().Move(targetDirection.normalized * (_speed * Time.deltaTime) +
-                            new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+        Controller().Move(targetDirection.normalized * (_speed * deltaTime) +
+                            new Vector3(0.0f, _verticalVelocity, 0.0f) * deltaTime);
 
         // update animator if using character
         if (_hasAnimator)
@@ -232,24 +262,28 @@ public class PlayerController
 
     private void GroundedCheck()
     {
-        // set sphere position, with offset
-        Vector3 spherePosition = new Vector3(Transform().position.x, Transform().position.y - GroundedOffset,
-            Transform().position.z);
-        Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers,
-            QueryTriggerInteraction.Ignore);
+        if (IsSimulation)
+        {
+            if (Input().forSimulationSignalGrounded)
+                Grounded = true;
+        }
+        else
+        {
+            // set sphere position, with offset
+            Vector3 spherePosition = new Vector3(Transform().position.x, Transform().position.y - GroundedOffset,
+                Transform().position.z);
+            Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers,
+                QueryTriggerInteraction.Ignore);   
+        }
 
         // update animator if using character
         if (_hasAnimator)
         {
             Animator().SetBool(_animIDGrounded, Grounded);
         }
-
-        // TODO: REMOVE THIS (HACK!!!)
-        if (!Grounded)
-            Grounded = spherePosition.y < 0.5;
     }
 
-    private void JumpAndGravity()
+    private void JumpAndGravity(float deltaTime)
     {
         if (Grounded)
         {
@@ -280,12 +314,17 @@ public class PlayerController
                 {
                     Animator().SetBool(_animIDJump, true);
                 }
+                
+                if (IsSimulation)
+                {
+                    Grounded = false; // Awful
+                }
             }
 
             // jump timeout
             if (_jumpTimeoutDelta >= 0.0f)
             {
-                _jumpTimeoutDelta -= Time.deltaTime;
+                _jumpTimeoutDelta -= deltaTime;
             }
         }
         else
@@ -296,7 +335,7 @@ public class PlayerController
             // fall timeout
             if (_fallTimeoutDelta >= 0.0f)
             {
-                _fallTimeoutDelta -= Time.deltaTime;
+                _fallTimeoutDelta -= deltaTime;
             }
             else
             {
@@ -315,7 +354,12 @@ public class PlayerController
         // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
         if (_verticalVelocity < _terminalVelocity)
         {
-            _verticalVelocity += Gravity * Time.deltaTime;
+            _verticalVelocity += Gravity * deltaTime;
+        }
+
+        if (IsSimulation && Grounded)
+        {
+            _verticalVelocity = 0;
         }
     }
 
