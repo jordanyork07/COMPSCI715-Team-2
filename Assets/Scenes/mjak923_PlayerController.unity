@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.638335, g: 0.88762844, b: 0.9159842, a: 1}
+  m_IndirectSpecularColor: {r: 0.6381559, g: 0.88753307, b: 0.9159111, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1817,6 +1817,31 @@ MonoBehaviour:
   randomiseRotation: 1
   opacity: 1
   shouldDoCollision: 1
+  animateIn: 1
+  AnimationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1962647874
 GameObject:
   m_ObjectHideFlags: 0
@@ -1852,6 +1877,13 @@ MonoBehaviour:
   randomiseRotation: 1
   opacity: 1
   shouldDoCollision: 0
+  animateIn: 0
+  AnimationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!4 &1962647876
 Transform:
   m_ObjectHideFlags: 0
