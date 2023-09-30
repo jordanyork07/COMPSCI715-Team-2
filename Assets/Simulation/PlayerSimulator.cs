@@ -188,7 +188,18 @@ public class PlayerSimulator : MonoBehaviour
                 inputState.jump = false;
                 inputState.forSimulationSignalGrounded = true;
 			},
-			_ => () => { }
+            (EventVerb.Start, PathGen.Verb.DoubleJump) => () =>
+            {
+                inputState.jump = true;
+            }
+            ,
+            (EventVerb.End, PathGen.Verb.DoubleJump) => () =>
+            {
+                inputState.jump = false;
+                inputState.forSimulationSignalGrounded = true;
+            }
+            ,
+            _ => () => { }
 		};
 
 		action();
