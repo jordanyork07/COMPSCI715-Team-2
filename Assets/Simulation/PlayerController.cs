@@ -228,15 +228,14 @@ public class PlayerController
 
         _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, deltaTime * SpeedChangeRate);
         if (_animationBlend < 0.01f) _animationBlend = 0f;
+        
         // Generate a random angle between -90 and 90 degrees
-        float randomAngle = UnityEngine.Random.Range(-90f, 90f);
-
-        // Convert the angle to radians
-        float radians = randomAngle * Mathf.Deg2Rad;
+        // Then convert the angle to radians
+        float randomAngle = UnityEngine.Random.Range(-90f, 90f) * Mathf.Deg2Rad;
 
         // Calculate the x and z components of the vector using trigonometry
-        float x = Mathf.Cos(radians);
-        float z = Mathf.Sin(radians);
+        float x = Mathf.Cos(randomAngle) * Input().move.x - Mathf.Sin(randomAngle) * Input().move.y;
+        float z = Mathf.Sin(randomAngle) * Input().move.x + Mathf.Cos(randomAngle) * Input().move.y;
 
         // normalise input direction
         Vector3 inputDirection = new Vector3(Input().move.x, 0.0f, Input().move.y).normalized;
@@ -272,7 +271,7 @@ public class PlayerController
         if (IsSimulation)
         {
             direction = new Vector3(x, 0f, z);
-        }
+        } 
 
         Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * direction;
 

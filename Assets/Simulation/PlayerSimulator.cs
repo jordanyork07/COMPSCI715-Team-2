@@ -173,12 +173,36 @@ public class PlayerSimulator : MonoBehaviour
 		{
 			(EventVerb.Start, PathGen.Verb.Move) => () =>
 			{
-				inputState.move = new Vector2(1, 1);
+				inputState.move = new Vector2(0, 1);
             },
 			(EventVerb.End, PathGen.Verb.Move) => () =>
 			{
                 inputState.move = new Vector2(0, 0);
             },
+			(EventVerb.Start, PathGen.Verb.Left) => () =>
+			{
+				inputState.move.x = -1f;
+            },
+			(EventVerb.End, PathGen.Verb.Left) => () =>
+			{
+                inputState.move.x = -0f;
+            },
+			(EventVerb.Start, PathGen.Verb.Right) => () =>
+			{
+				inputState.move.x = 1f;
+            },
+			(EventVerb.End, PathGen.Verb.Right) => () =>
+			{
+                inputState.move.x = 0f;
+            },
+			(EventVerb.Start, PathGen.Verb.Sprint) => () =>
+			{
+				inputState.sprint = true;
+			},
+			(EventVerb.End, PathGen.Verb.Sprint) => () =>
+			{
+				inputState.sprint = false;
+			},
 			(EventVerb.Start, PathGen.Verb.Jump) => () =>
 			{
                 inputState.jump = true;
