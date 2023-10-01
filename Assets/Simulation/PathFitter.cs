@@ -5,6 +5,7 @@ using System.Linq;
 using System;
 using System.IO;
 using Random = UnityEngine.Random;
+using UnityEngine.SceneManagement;
 
 [ExecuteInEditMode]
 public class PathFitter : MonoBehaviour
@@ -73,8 +74,16 @@ public class PathFitter : MonoBehaviour
     {
 
         private void OnTriggerEnter(Collider other)
-        {
-            // execute some code when player enters trigger
+        {   
+            string currentSceneName = SceneManager.GetActiveScene().name;
+            Debug.Log(currentSceneName);
+            
+            // Get the current level number
+            int currentLevel = int.Parse(currentSceneName.Split('_')[1]);
+
+            // Load the next level
+            SceneManager.LoadScene("level_" + (currentLevel + 1));
+            
             Debug.Log("Player entered finish trigger");
         }
     }
@@ -99,7 +108,6 @@ public class PathFitter : MonoBehaviour
                 BoxCollider collider = model.AddComponent<BoxCollider>();
                 collider.isTrigger = true;
                 collider.GetComponent<Renderer>().material.color = Color.green;
-
                 FinishTrigger cubeTrigger = model.AddComponent<FinishTrigger>();
 
             }
