@@ -26,7 +26,8 @@ public class PlayerSimulator : MonoBehaviour
     // Use this for initialization
     void Start()
 	{
-		
+		var actions = GeneratePath();
+		SimulateActionList(actions);
 	}
 
     // Update is called once per frame
