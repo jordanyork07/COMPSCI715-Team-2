@@ -5,7 +5,6 @@ using System.Linq;
 using System;
 using System.IO;
 using Random = UnityEngine.Random;
-using UnityEngine.SceneManagement;
 
 [ExecuteInEditMode]
 public class PathFitter : MonoBehaviour
@@ -17,15 +16,14 @@ public class PathFitter : MonoBehaviour
 
     // public Vector3 modelScale = new Vector3(1.0f, 1.0f, 1.0f);
     public Color cubeColor = Color.white;
-
     
     public Vector2 minMaxScale = new Vector2(1f, 1f);
-    public Vector2 minMaxVerticalRange = new Vector2(1f, 1f);
     public bool randomiseRotation = true;
-    public float opacity = 1.0f;
+    public bool transparent = false;
     public bool shouldDoCollision = true;
     public bool animateIn = false;
     public AnimationCurve AnimationCurve;
+    public Material material;
 
     private List<Animatable> _animatables = new();
 
@@ -50,7 +48,7 @@ public class PathFitter : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     void DestroyModels()
@@ -68,29 +66,10 @@ public class PathFitter : MonoBehaviour
     protected virtual GameObject CreateModel()
     {
         GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        cube.GetComponent<Renderer>().material.color = cubeColor;
+        var renderer = cube.GetComponent<Renderer>();
+        renderer.material = material;
+        renderer.material.color = cubeColor;
         return cube;
-    }
-    public class FinishTrigger : MonoBehaviour
-    {
-        //public GameObject menu;
-        private void OnTriggerEnter(Collider other)
-        {   
-            string currentSceneName = SceneManager.GetActiveScene().name;
-            Debug.Log(currentSceneName);
-            
-            // Get the current level number
-            // if(menu != null)
-            // {
-            //     menu.SetActive(true);
-            // }
-            // int currentLevel = int.Parse(currentSceneName.Split('_')[1]);
-            UI.instance.OpenEndScreen();
-            // // Load the next level
-            // SceneManager.LoadScene("level_" + (currentLevel + 1));
-            
-            Debug.Log("Player entered finish trigger");
-        }
     }
 
     void AddModelsAtPoints()
@@ -100,26 +79,18 @@ public class PathFitter : MonoBehaviour
             // Randomness
             var rotation = Quaternion.identity;
             var scale = Random.Range(minMaxScale.x, minMaxScale.y);
-            var vert = Random.Range(minMaxVerticalRange.x, minMaxVerticalRange.y);
 
             if (randomiseRotation)
                 rotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
             
             // Create a GameObject
             GameObject model = CreateModel();
-            // if last point, add end collider
-            if (point == path.Last())
-            {
-                BoxCollider collider = model.AddComponent<BoxCollider>();
-                collider.isTrigger = true;
-                collider.GetComponent<Renderer>().material.color = Color.green;
-                FinishTrigger cubeTrigger = model.AddComponent<FinishTrigger>();
-
-            }
             model.transform.parent = transform;
             model.transform.localScale = new Vector3(scale, scale, scale);
             model.transform.rotation = rotation;
-            model.transform.position = point + new Vector3(0f, vert, 0f);
+            model.transform.position = point;
+
+            
 
             if (!shouldDoCollision && model.TryGetComponent<Collider>(out var component))
                 DestroyImmediate(component);
