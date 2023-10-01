@@ -17,6 +17,7 @@ public class PathFitter : MonoBehaviour
 
     // public Vector3 modelScale = new Vector3(1.0f, 1.0f, 1.0f);
     public Color cubeColor = Color.white;
+
     
     public Vector2 minMaxScale = new Vector2(1f, 1f);
     public Vector2 minMaxVerticalRange = new Vector2(1f, 1f);
@@ -72,17 +73,21 @@ public class PathFitter : MonoBehaviour
     }
     public class FinishTrigger : MonoBehaviour
     {
-
+        public GameObject menu;
         private void OnTriggerEnter(Collider other)
         {   
             string currentSceneName = SceneManager.GetActiveScene().name;
             Debug.Log(currentSceneName);
             
             // Get the current level number
-            int currentLevel = int.Parse(currentSceneName.Split('_')[1]);
+            if(menu != null)
+            {
+                menu.SetActive(true);
+            }
+            // int currentLevel = int.Parse(currentSceneName.Split('_')[1]);
 
-            // Load the next level
-            SceneManager.LoadScene("level_" + (currentLevel + 1));
+            // // Load the next level
+            // SceneManager.LoadScene("level_" + (currentLevel + 1));
             
             Debug.Log("Player entered finish trigger");
         }
