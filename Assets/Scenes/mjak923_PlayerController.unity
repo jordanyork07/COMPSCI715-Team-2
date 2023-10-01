@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.63823354, g: 0.88757074, b: 0.91592675, a: 1}
+  m_IndirectSpecularColor: {r: 0.63830876, g: 0.88759154, b: 0.91595536, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1770,7 +1770,7 @@ MonoBehaviour:
   uiRenderer: {fileID: 1420185354}
   pattern: 0
   density: 2
-  length: 10
+  length: 60
   jumpFrequency: 0.8
   jumpLengths:
   - 0.8

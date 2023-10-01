@@ -82,9 +82,9 @@ public class PathGen : MonoBehaviour
     public float[] jumpLengths = { 0.8f, 1.6f };
     public Dictionary<Density, float> actionStepMappings = new()
     {
-        { Density.Low, 3.0f },
-        { Density.Medium, 2.0f },
-        { Density.High, 1.0f },
+        { Density.Low, 2.5f },
+        { Density.Medium, 1.5f },
+        { Density.High, 0.5f },
     };
 
     Verb chooseRandomVerb()

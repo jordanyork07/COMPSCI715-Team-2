@@ -173,7 +173,7 @@ public class PlayerSimulator : MonoBehaviour
 
 					if (voxelGrid.Contains(groundVoxel))
 					{
-						Debug.LogError($"Clash! Voxel {groundVoxel} intersects with exclusion zone");
+						// Debug.LogError($"Clash! Voxel {groundVoxel} intersects with exclusion zone");
 					}
 					else
 					{
