@@ -69,6 +69,15 @@ public class PathFitter : MonoBehaviour
         cube.GetComponent<Renderer>().material.color = cubeColor;
         return cube;
     }
+    public class FinishTrigger : MonoBehaviour
+    {
+
+        private void OnTriggerEnter(Collider other)
+        {
+            // execute some code when player enters trigger
+            Debug.Log("Player entered finish trigger");
+        }
+    }
 
     void AddModelsAtPoints()
     {
@@ -84,6 +93,16 @@ public class PathFitter : MonoBehaviour
             
             // Create a GameObject
             GameObject model = CreateModel();
+            // if last point, add end collider
+            if (point == path.Last())
+            {
+                BoxCollider collider = model.AddComponent<BoxCollider>();
+                collider.isTrigger = true;
+                collider.GetComponent<Renderer>().material.color = Color.green;
+
+                FinishTrigger cubeTrigger = model.AddComponent<FinishTrigger>();
+
+            }
             model.transform.parent = transform;
             model.transform.localScale = new Vector3(scale, scale, scale);
             model.transform.rotation = rotation;
