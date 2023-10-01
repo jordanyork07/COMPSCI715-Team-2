@@ -73,19 +73,19 @@ public class PathFitter : MonoBehaviour
     }
     public class FinishTrigger : MonoBehaviour
     {
-        public GameObject menu;
+        //public GameObject menu;
         private void OnTriggerEnter(Collider other)
         {   
             string currentSceneName = SceneManager.GetActiveScene().name;
             Debug.Log(currentSceneName);
             
             // Get the current level number
-            if(menu != null)
-            {
-                menu.SetActive(true);
-            }
+            // if(menu != null)
+            // {
+            //     menu.SetActive(true);
+            // }
             // int currentLevel = int.Parse(currentSceneName.Split('_')[1]);
-
+            UI.instance.OpenEndScreen();
             // // Load the next level
             // SceneManager.LoadScene("level_" + (currentLevel + 1));
             
