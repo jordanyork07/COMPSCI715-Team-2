@@ -4,31 +4,7 @@ using static PlayerController;
 using System;
 using System.Linq;
 using Simulation;
-using UnityEditor;
 using static PathGen;
-
-[CustomEditor(typeof(PlayerSimulator))]
-public class PlayerSimulatorEditor : Editor
-{
-	private PlayerSimulator playerSimulator;
-
-    private void OnEnable()
-    {
-        playerSimulator = (PlayerSimulator)target;
-    }
-
-
-    public override void OnInspectorGUI()
-    {
-		base.OnInspectorGUI();
-
-        if (GUILayout.Button("Generate"))
-        {
-	        var actions = playerSimulator.GeneratePath();
-            playerSimulator.SimulateActionList(actions);
-        }
-    }
-}
 
 [RequireComponent(typeof(PathGen))]
 public class PlayerSimulator : MonoBehaviour
@@ -109,7 +85,7 @@ public class PlayerSimulator : MonoBehaviour
 	}
 
 
-    internal void SimulateActionList(List<PathGen.Action> actions)
+	public void SimulateActionList(List<PathGen.Action> actions)
 	{
         var simObject = Instantiate(simObjectPrefab, new Vector3(0, 0, 0), Quaternion.identity);
 

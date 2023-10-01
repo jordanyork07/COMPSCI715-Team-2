@@ -1,32 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
-
-[CustomEditor(typeof(PathGen))]
-public class PathGenEditor : Editor
-{
-    private PathGen pathGen;
-
-    private void OnEnable()
-    {
-        pathGen = (PathGen)target;
-    }
-
-    public override void OnInspectorGUI()
-    {
-        base.OnInspectorGUI();
-
-        if (GUILayout.Button("Generate"))
-        {
-            pathGen.MarkDirty();
-        }
-    }
-}
 
 public class PathGen : MonoBehaviour
 {
