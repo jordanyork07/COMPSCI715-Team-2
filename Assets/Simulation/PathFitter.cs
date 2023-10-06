@@ -5,6 +5,7 @@ using System.Linq;
 using System;
 using System.IO;
 using Random = UnityEngine.Random;
+using UnityEngine.SceneManagement;
 
 [ExecuteInEditMode]
 public class PathFitter : MonoBehaviour
@@ -16,6 +17,7 @@ public class PathFitter : MonoBehaviour
 
     // public Vector3 modelScale = new Vector3(1.0f, 1.0f, 1.0f);
     public Color cubeColor = Color.white;
+
     
     public Vector2 minMaxScale = new Vector2(1f, 1f);
     public Vector2 minMaxVerticalRange = new Vector2(1f, 1f);
@@ -69,6 +71,27 @@ public class PathFitter : MonoBehaviour
         cube.GetComponent<Renderer>().material.color = cubeColor;
         return cube;
     }
+    public class FinishTrigger : MonoBehaviour
+    {
+        //public GameObject menu;
+        private void OnTriggerEnter(Collider other)
+        {   
+            string currentSceneName = SceneManager.GetActiveScene().name;
+            Debug.Log(currentSceneName);
+            
+            // Get the current level number
+            // if(menu != null)
+            // {
+            //     menu.SetActive(true);
+            // }
+            // int currentLevel = int.Parse(currentSceneName.Split('_')[1]);
+            UI.instance.OpenEndScreen();
+            // // Load the next level
+            // SceneManager.LoadScene("level_" + (currentLevel + 1));
+            
+            Debug.Log("Player entered finish trigger");
+        }
+    }
 
     void AddModelsAtPoints()
     {
@@ -84,6 +107,15 @@ public class PathFitter : MonoBehaviour
             
             // Create a GameObject
             GameObject model = CreateModel();
+            // if last point, add end collider
+            if (point == path.Last())
+            {
+                BoxCollider collider = model.AddComponent<BoxCollider>();
+                collider.isTrigger = true;
+                collider.GetComponent<Renderer>().material.color = Color.green;
+                FinishTrigger cubeTrigger = model.AddComponent<FinishTrigger>();
+
+            }
             model.transform.parent = transform;
             model.transform.localScale = new Vector3(scale, scale, scale);
             model.transform.rotation = rotation;

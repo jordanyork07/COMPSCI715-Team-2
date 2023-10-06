@@ -4,5 +4,56 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: 44c8c7f55755c40e5a93aef11fb8a052
+  - enabled: 1
+    path: Assets/Scenes/mjak923_PlayerController.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/level_1.unity
+    guid: 2da98df1a21974035af09356f8bd3b8c
+  - enabled: 1
+    path: Assets/Scenes/level_2.unity
+    guid: 261c98733a8ed4b6083949b3fed6e79c
+  - enabled: 1
+    path: Assets/Scenes/level_3.unity
+    guid: 14b919ec7f2984cd6b4d2a77997d102d
+  - enabled: 1
+    path: Assets/Scenes/level_4.unity
+    guid: 9c13825efa4384ace815a23f19c57eff
+  - enabled: 1
+    path: Assets/Scenes/level_5.unity
+    guid: 1762c9b4ee31648b4a70812d081d8f1a
+  - enabled: 1
+    path: Assets/Scenes/level_6.unity
+    guid: a18298c1efa5f4ad981b0be0894a30b3
+  - enabled: 1
+    path: Assets/Scenes/level_7.unity
+    guid: 15ed4977d976e4ecd8c2f216c4cdff22
+  - enabled: 1
+    path: Assets/Scenes/level_8.unity
+    guid: 1c8c577c8297b48a69205574eb119ee0
+  - enabled: 1
+    path: Assets/Scenes/level_9.unity
+    guid: 994e078b398e24b9892bb54ca669835a
+  - enabled: 1
+    path: Assets/Scenes/level_10.unity
+    guid: caec9ba7170c343a99d12e5cda7124d5
+  - enabled: 1
+    path: Assets/Scenes/level_11.unity
+    guid: c7c400ab2e27c4ddc9098cd42c0e478a
+  - enabled: 1
+    path: Assets/Scenes/level_12.unity
+    guid: cfc1190be40e643ed9c3a876a1fc174f
+  - enabled: 1
+    path: Assets/Scenes/level_13.unity
+    guid: fd547545cb7d045e8b52dbd52a864c24
+  - enabled: 1
+    path: Assets/Scenes/level_14.unity
+    guid: 3491e341b159845afb3725fff870950f
+  - enabled: 1
+    path: Assets/Scenes/level_15.unity
+    guid: 10521333d0f01480e952c4787fe4435b
   m_configObjects: {}
