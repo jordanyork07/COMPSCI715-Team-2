@@ -56,4 +56,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/level_15.unity
     guid: 10521333d0f01480e952c4787fe4435b
+  - enabled: 1
+    path: Assets/Scenes/timesupscreen.unity
+    guid: 59759f4db743d4d4d927ce9c4dcb4b20
   m_configObjects: {}
