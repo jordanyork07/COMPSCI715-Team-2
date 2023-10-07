@@ -1,37 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using static PlayerController;
 using System;
 using System.Linq;
 using Simulation;
-using UnityEditor;
 using static PathGen;
-using UnityEngine.UIElements;
-using UnityEditor.ShaderGraph;
-
-[CustomEditor(typeof(PlayerSimulator))]
-public class PlayerSimulatorEditor : Editor
-{
-	private PlayerSimulator playerSimulator;
-
-    private void OnEnable()
-    {
-        playerSimulator = (PlayerSimulator)target;
-    }
-
-
-    public override void OnInspectorGUI()
-    {
-		base.OnInspectorGUI();
-
-        if (GUILayout.Button("Generate"))
-        {
-	        var actions = playerSimulator.GeneratePath();
-            playerSimulator.SimulateActionList(actions);
-        }
-    }
-}
 
 [RequireComponent(typeof(PathGen))]
 public class PlayerSimulator : MonoBehaviour
@@ -39,6 +12,7 @@ public class PlayerSimulator : MonoBehaviour
 	public PlayerController playerController;
 	public PathFitter pathFitter;
     public PathFitter pathVis;
+    public PathFitter areaVis;
 	public GameObject simObjectPrefab;
 
 	private InputState inputState = new InputState();
@@ -52,7 +26,8 @@ public class PlayerSimulator : MonoBehaviour
     // Use this for initialization
     void Start()
 	{
-		
+		var actions = GeneratePath();
+		SimulateActionList(actions);
 	}
 
     // Update is called once per frame
@@ -80,7 +55,38 @@ public class PlayerSimulator : MonoBehaviour
         }
     }
 
-    internal void SimulateActionList(List<PathGen.Action> actions)
+	private Vector3 GetGroundVoxel(GameObject player)
+	{
+		var controller = player.GetComponent<CharacterController>();
+		var playerBounds = controller.bounds;
+		
+		return new Vector3((int)playerBounds.center.x, (int)playerBounds.min.y - 1, (int)playerBounds.center.z);
+	}
+	
+	private IEnumerable<Vector3> CalculateIntersectingVoxels(GameObject player)
+	{
+		var controller = player.GetComponent<CharacterController>();
+		var playerBounds = controller.bounds;
+		
+		// Iterate through the player's bounding box
+		for (double x = Math.Floor(playerBounds.min.x); x <= Math.Ceiling(playerBounds.max.x); x += 1f)
+		{
+			for (double y = Math.Floor(playerBounds.min.y); y <= Math.Ceiling(playerBounds.max.y); y += 1f)
+			{
+				for (double z = Math.Floor(playerBounds.min.z); z <= Math.Ceiling(playerBounds.max.z); z += 1f)
+				{
+					// Calculate the voxel position
+					Vector3 voxelPosition = new Vector3((int)x, (int)y, (int)z);
+
+					// Add the voxel position to the list
+					yield return voxelPosition;
+				}
+			}
+		}
+	}
+
+
+	public void SimulateActionList(List<PathGen.Action> actions)
 	{
         var simObject = Instantiate(simObjectPrefab, new Vector3(0, 0, 0), Quaternion.identity);
 
@@ -109,6 +115,7 @@ public class PlayerSimulator : MonoBehaviour
 
         List<Vector3> pathPoints = new List<Vector3>();
         RleList fitPoints = new RleList();
+        HashSet<Vector3> voxelGrid = new HashSet<Vector3>();
 
         playerController.IsSimulation = true;
 		playerController.Start();
@@ -139,8 +146,20 @@ public class PlayerSimulator : MonoBehaviour
 					// else
 					pathPoints.Add(pos);
 					
-					if (playerController.Grounded)
-						fitPoints.StartAt(pos);
+					var groundVoxel = GetGroundVoxel(simObject);
+
+					if (voxelGrid.Contains(groundVoxel))
+					{
+						// Debug.LogError($"Clash! Voxel {groundVoxel} intersects with exclusion zone");
+					}
+					else
+					{
+						if (playerController.Grounded)
+							fitPoints.StartAt(groundVoxel);	
+					}
+                    
+					var voxels = CalculateIntersectingVoxels(simObject);
+					voxelGrid.UnionWith(voxels);
 
                 }, true); // simulate being in the updated state until the next event
                 
@@ -148,8 +167,8 @@ public class PlayerSimulator : MonoBehaviour
                 var point = playerController.Transform().position;
                 
                 // Start of Jump (why?)
-                if (playerController.Grounded)
-	                fitPoints.StartAt(point);
+                // if (playerController.Grounded)
+	               //  fitPoints.StartAt(point);
 	               
 	            
 			} else
@@ -160,6 +179,7 @@ public class PlayerSimulator : MonoBehaviour
 
 		pathFitter.path = fitPoints.GetPoints();
         pathVis.path = pathPoints;
+        areaVis.path = voxelGrid.ToList();
 
 		DestroyImmediate(simObject);
 		playerController = null;
@@ -188,18 +208,7 @@ public class PlayerSimulator : MonoBehaviour
                 inputState.jump = false;
                 inputState.forSimulationSignalGrounded = true;
 			},
-            (EventVerb.Start, PathGen.Verb.DoubleJump) => () =>
-            {
-                inputState.jump = true;
-            }
-            ,
-            (EventVerb.End, PathGen.Verb.DoubleJump) => () =>
-            {
-                inputState.jump = false;
-                inputState.forSimulationSignalGrounded = true;
-            }
-            ,
-            _ => () => { }
+			_ => () => { }
 		};
 
 		action();
