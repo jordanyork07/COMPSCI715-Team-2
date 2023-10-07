@@ -18,12 +18,12 @@ public class PathFitter : MonoBehaviour
     public Color cubeColor = Color.white;
     
     public Vector2 minMaxScale = new Vector2(1f, 1f);
-    public Vector2 minMaxVerticalRange = new Vector2(1f, 1f);
     public bool randomiseRotation = true;
-    public float opacity = 1.0f;
+    public bool transparent = false;
     public bool shouldDoCollision = true;
     public bool animateIn = false;
     public AnimationCurve AnimationCurve;
+    public Material material;
 
     private List<Animatable> _animatables = new();
 
@@ -48,7 +48,7 @@ public class PathFitter : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     void DestroyModels()
@@ -66,7 +66,9 @@ public class PathFitter : MonoBehaviour
     protected virtual GameObject CreateModel()
     {
         GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        cube.GetComponent<Renderer>().material.color = cubeColor;
+        var renderer = cube.GetComponent<Renderer>();
+        renderer.material = material;
+        renderer.material.color = cubeColor;
         return cube;
     }
 
@@ -77,7 +79,6 @@ public class PathFitter : MonoBehaviour
             // Randomness
             var rotation = Quaternion.identity;
             var scale = Random.Range(minMaxScale.x, minMaxScale.y);
-            var vert = Random.Range(minMaxVerticalRange.x, minMaxVerticalRange.y);
 
             if (randomiseRotation)
                 rotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
@@ -87,7 +88,9 @@ public class PathFitter : MonoBehaviour
             model.transform.parent = transform;
             model.transform.localScale = new Vector3(scale, scale, scale);
             model.transform.rotation = rotation;
-            model.transform.position = point + new Vector3(0f, vert, 0f);
+            model.transform.position = point;
+
+            
 
             if (!shouldDoCollision && model.TryGetComponent<Collider>(out var component))
                 DestroyImmediate(component);
