@@ -143,7 +143,7 @@ public class PathGen : MonoBehaviour
 
         // Chose spacing between beats
         float baseStep = actionStepMappings[density];
-        Distribution<float> stepDistribution = new TriangularDistribution<float>(0.5f * baseStep, 1.5f * baseStep);
+        Distribution<float> stepDistribution = new TriangularDistribution(0.5f * baseStep, 1.5f * baseStep);
 
         List<Action> actions = new List<Action>();
 
@@ -157,7 +157,7 @@ public class PathGen : MonoBehaviour
             bool canSprint = i > canSprintAfter;
             
             Verb verb = chooseValidVerb(canJump, canSprint);
-            float actionDuration = actionStep;
+            float actionDuration = baseStep;
 
 
             switch (verb) {
@@ -167,7 +167,7 @@ public class PathGen : MonoBehaviour
                     canJumpAfter = i + actionDuration;
                     break;
                 case Verb.Sprint:
-                    actionDuration = actionStep * 1.5f;
+                    actionDuration = baseStep * 1.5f;
                     canSprintAfter = i + actionDuration;
                     break;
                 default:
