@@ -1,6 +1,7 @@
 ﻿using System;
 using StarterAssets;
 using UnityEngine;
+using Evaluation;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
@@ -109,24 +110,24 @@ public class PlayerControllerHost : MonoBehaviour
         if (transform.position.y < -100)
         {   
             
-            Debug.Log(currentTime + " Player fell");
+            Evaluation.Logger.LogByEvalKey(Evaluator.Key, " Player fell");
             transform.position = new Vector3(0, 2, -4);
         }
         if (Input.GetKeyUp("w"))
         {
-            Debug.Log(currentTime + " W key was pressed");
+            Evaluation.Logger.LogByEvalKey(Evaluator.Key, " W key was pressed");
         }
-        if (Input.GetKeyUp("space"))
+        else if (Input.GetKeyUp("space"))
         {
-            Debug.Log(currentTime + "  space key was pressed");
+            Evaluation.Logger.LogByEvalKey(Evaluator.Key, " space key was pressed");
         }
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        else if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            Debug.Log(currentTime + " shift down key was pressed");
+            Evaluation.Logger.LogByEvalKey(Evaluator.Key, " shift down key was pressed");
         }
-        if (Input.GetKeyUp(KeyCode.LeftShift))
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            Debug.Log(currentTime + " shift up key was pressed");
+            Evaluation.Logger.LogByEvalKey(Evaluator.Key, " shift up key was pressed");
         }
     }
 

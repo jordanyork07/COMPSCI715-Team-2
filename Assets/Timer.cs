@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Evaluation;
 
 public class Timer : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class Timer : MonoBehaviour
     {   
         var CurrentTime = DateTime.Now;
         if(remainingTime == 300){
-            Debug.Log(CurrentTime+ " Timer Started!");
+            Evaluation.Logger.LogByEvalKey(Evaluator.Key, " Timer Started!");
         }
         if (remainingTime > 0)
         {
@@ -28,7 +29,8 @@ public class Timer : MonoBehaviour
         else if (remainingTime < 0)
         {
             remainingTime = 0;
-            Debug.Log(CurrentTime+ " Time's up!");
+            Evaluation.Logger.LogByEvalKey(Evaluator.Key, " Timer Ended!");
+
             SceneManager.LoadScene("timesupscreen");
         }
         int minutes = Mathf.FloorToInt(remainingTime / 60);
