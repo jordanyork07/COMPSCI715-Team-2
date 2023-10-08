@@ -23,14 +23,17 @@ public class PlayerSimulator : MonoBehaviour
 		return GetComponent<PathGen>().GetRhythm();
 	}
 
-    // Use this for initialization
-    void Start()
+	public void StartSimulation() 
 	{
 		var actions = GeneratePath();
 		SimulateActionList(actions);
 	}
+    
+    void Start()
+	{
+	}
 
-    // Update is called once per frame
+
     void Update()
 	{
 
@@ -160,7 +163,7 @@ public class PlayerSimulator : MonoBehaviour
                     
 					var voxels = CalculateIntersectingVoxels(simObject);
 					voxelGrid.UnionWith(voxels);
-
+					
                 }, true); // simulate being in the updated state until the next event
                 
                 // Fitting logic (TODO: Extract out)
@@ -178,8 +181,8 @@ public class PlayerSimulator : MonoBehaviour
         }
 
 		pathFitter.path = fitPoints.GetPoints();
-        pathVis.path = pathPoints;
-        areaVis.path = voxelGrid.ToList();
+		if (pathVis) pathVis.path = pathPoints;
+        if (areaVis) areaVis.path = voxelGrid.ToList();
 
 		DestroyImmediate(simObject);
 		playerController = null;
