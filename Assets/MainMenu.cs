@@ -7,7 +7,7 @@ public class MainMenu : MonoBehaviour
 {
     public void Play()
     {
-        SceneManager.LoadScene("mjak923_PlayerController");
+        SceneManager.LoadScene("level_2");
     }
 
     public void Quit()
