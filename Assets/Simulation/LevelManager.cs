@@ -19,15 +19,43 @@ public class LevelManager : MonoBehaviour
     void Start()
     {
         var fitter = GetComponent<PathFitter>();
-        // fitter.SetActive(false);
         GetComponent<PlayerSimulator>().pathFitter = fitter;
+        InitializeLevels();
         SimulateLevels();
+        Restart();
+    }
 
+    void InitializeLevels() 
+    {
+        // Remove extra levels
+        if (levels.Count > numberOfLevels)
+        {
+            foreach (var level in levels.GetRange(numberOfLevels, levels.Count - numberOfLevels))
+            {
+                DestroyImmediate(level);
+            }
+            
+            levels = levels.GetRange(0, numberOfLevels);
+        }
+
+        // setup empty levels        
+        for (int i = 0; i < numberOfLevels; i++)
+        {   
+            if (i < levels.Count) continue;
+
+            GameObject level = new GameObject("Level " + i);
+            level.transform.parent = transform;
+            levels.Add(level); 
+            
+            if (i != activeLevel) {
+                level.SetActive(false);
+            }
+        }
     }
 
     void Update() 
     {
-
+        // Calling InitializeLevels causes funk
     }
 
     
@@ -37,14 +65,16 @@ public class LevelManager : MonoBehaviour
         {
             DestroyImmediate(level);
         });
-        levels = new List<GameObject>();
+        levels.Clear();
+        InitializeLevels();
     }
 
     public void SimulateLevels()
     {   
         if (!simulate) return ;
-        
         Reset();
+        Restart();
+
         for (int i = 0; i < numberOfLevels; i++)
         {
             var simulator = GetComponent<PlayerSimulator>();
@@ -56,7 +86,7 @@ public class LevelManager : MonoBehaviour
                 Debug.LogError("No models found for simulation " + i);
             }
             
-            GameObject level = new GameObject("Level " + i);
+            GameObject level = levels[i];
             level.transform.parent = transform;
             // level.transform.position = new Vector3(0, 0, 0);
             // level.transform.rotation = Quaternion.identity;
@@ -65,19 +95,16 @@ public class LevelManager : MonoBehaviour
             foreach (var model in levelModels)
             {
                 model.transform.parent = level.transform;
-            }
-
-            levels.Add(level); 
-
-            if (i != activeLevel) {
-                level.SetActive(false);
-            }
+            }            
         }
     }
 
     private void GoToLevel(int level)
     {
-        levels[activeLevel].SetActive(false);
+        if (level < numberOfLevels) {
+
+            levels[activeLevel].SetActive(false);
+        }
         activeLevel = level;
         levels[activeLevel].SetActive(true);
     }
