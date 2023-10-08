@@ -19,6 +19,7 @@ namespace Evaluation
             {
                 Evaluator.SetEvalKey(input.text);
                 SceneManager.LoadScene("mjak923_PlayerController");
+                Evaluator.Key.Print();
             }
             catch (Exception e)
             {
