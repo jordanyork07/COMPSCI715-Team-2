@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +12,11 @@ public class Timer : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {   
+        var CurrentTime = DateTime.Now;
+        if(remainingTime == 300){
+            Debug.Log(CurrentTime+ " Timer Started!");
+        }
         if (remainingTime > 0)
         {
             remainingTime -= Time.deltaTime;
@@ -23,6 +28,7 @@ public class Timer : MonoBehaviour
         else if (remainingTime < 0)
         {
             remainingTime = 0;
+            Debug.Log(CurrentTime+ " Time's up!");
             SceneManager.LoadScene("timesupscreen");
         }
         int minutes = Mathf.FloorToInt(remainingTime / 60);
