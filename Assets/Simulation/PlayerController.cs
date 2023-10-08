@@ -202,6 +202,7 @@ public class PlayerController
 
         // a reference to the players current horizontal velocity
         float currentHorizontalSpeed = new Vector3(Controller().velocity.x, 0.0f, Controller().velocity.z).magnitude;
+        currentHorizontalSpeed = Mathf.Min(currentHorizontalSpeed, SprintSpeed);
 
         float speedOffset = 0.1f;
         float inputMagnitude = Input().analogMovement ? Input().move.magnitude : 1f;
@@ -261,7 +262,7 @@ public class PlayerController
             }
             else
             {
-                Debug.Log("Main Camera is null - not rotating!");
+                // Debug.Log("Main Camera is null - not rotating!");
             }
         }
 
