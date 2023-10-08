@@ -1,10 +1,12 @@
 ﻿using System;
 using StarterAssets;
 using UnityEngine;
+using Evaluation;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
 using static PlayerController;
+using static UnityEditor.PlayerSettings;
 #endif
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
@@ -103,11 +105,29 @@ public class PlayerControllerHost : MonoBehaviour
             Start();
 
         _delegate.Tick(fixedTime, deltaTime, (n) => { }, true);
-         
+        var currentTime = DateTime.Now;
         // Fall prevention
         if (transform.position.y < -100)
-        {
+        {   
+            
+            Evaluation.Logger.LogByEvalKey(Evaluator.Key, " Player fell");
             transform.position = new Vector3(0, 2, -4);
+        }
+        if (Input.GetKeyUp("w"))
+        {
+            Evaluation.Logger.LogByEvalKey(Evaluator.Key, " W key was pressed");
+        }
+        else if (Input.GetKeyUp("space"))
+        {
+            Evaluation.Logger.LogByEvalKey(Evaluator.Key, " space key was pressed");
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            Evaluation.Logger.LogByEvalKey(Evaluator.Key, " shift down key was pressed");
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            Evaluation.Logger.LogByEvalKey(Evaluator.Key, " shift up key was pressed");
         }
     }
 

@@ -10,10 +10,12 @@ namespace Evaluation
             return Time.realtimeSinceStartup;
         }
 
-        private static void LogByEvalKey(EvalKey evalKey, string append)
+        public static void LogByEvalKey(EvalKey evalKey, string append)
         {
             using StreamWriter sw = File.AppendText($"eval-file-{evalKey.Encode()}.txt");
+            //Debug.Log("Logging to " + $"eval-file-{evalKey.Encode()}.txt");
             sw.WriteLine($"[{GetGameTime()}] {append}");
+            Debug.Log($"[{GetGameTime()}] {append}");
         }
         
         public static void LogLevelStart(EvalKey evalKey, int levelId)
