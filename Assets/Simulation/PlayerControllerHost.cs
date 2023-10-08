@@ -107,7 +107,7 @@ public class PlayerControllerHost : MonoBehaviour
         _delegate.Tick(fixedTime, deltaTime, (n) => { }, true);
         var currentTime = DateTime.Now;
         // Fall prevention
-        if (transform.position.y < -100)
+        if (transform.position.y < -50)
         {   
             
             Evaluation.Logger.LogByEvalKey(Evaluator.Key, " Player fell");

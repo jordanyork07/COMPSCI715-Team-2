@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using static PlayerController;
 using System;
 using System.Linq;
+using Evaluation;
 using Simulation;
 using static PlayerSimulator;
 
@@ -116,7 +117,10 @@ public class LevelManager : MonoBehaviour
     
     public void NextSimulation()
     {
-        GoToLevel((activeLevel + 1) % numberOfLevels);
+        if (activeLevel + 1 < numberOfLevels)
+            GoToLevel(activeLevel + 1);
+        else
+            Evaluator.LoadNextInterimScene();
     }
 
     

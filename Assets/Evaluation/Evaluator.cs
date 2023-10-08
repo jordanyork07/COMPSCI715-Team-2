@@ -1,9 +1,21 @@
+using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+
 namespace Evaluation
 {
     public static class Evaluator
     {
         public static EvalKey Key { get; private set; }
 
+        private static Dictionary<int, string> _sceneMap = new()
+        {
+            {1, "SwingLevels"},
+            {2, "RandomLevels"},
+            {3, "ManualLevels"}
+        };
+
+        private static Queue<string> _queuedScenes;
+        
         static Evaluator()
         {
             Key = new EvalKey();
@@ -13,6 +25,27 @@ namespace Evaluation
         {
             Key = EvalKey.Decode(base64);
             Key.Print();
+
+            _queuedScenes = new Queue<string>();
+            foreach (var sceneId in Key.Order)
+            {
+                var sceneName = _sceneMap[sceneId];
+                _queuedScenes.Enqueue(sceneName);
+            }
+        }
+
+        public static void LoadNextScene()
+        {
+            if (_queuedScenes.TryDequeue(out var sceneName))
+                SceneManager.LoadScene(sceneName);
+        }
+
+        public static void LoadNextInterimScene()
+        {
+            if (_queuedScenes.TryPeek(out var sceneName))
+                SceneManager.LoadScene("timesupscreen");
+            else
+                SceneManager.LoadScene("fin");
         }
     }
 }

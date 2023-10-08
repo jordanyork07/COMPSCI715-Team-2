@@ -18,7 +18,7 @@ namespace Evaluation
             try
             {
                 Evaluator.SetEvalKey(input.text);
-                SceneManager.LoadScene("mjak923_PlayerController");
+                SceneManager.LoadScene("tutorial-ready");
                 Evaluator.Key.Print();
             }
             catch (Exception e)
