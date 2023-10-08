@@ -1,32 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
-
-[CustomEditor(typeof(PathGen))]
-public class PathGenEditor : Editor
-{
-    private PathGen pathGen;
-
-    private void OnEnable()
-    {
-        pathGen = (PathGen)target;
-    }
-
-    public override void OnInspectorGUI()
-    {
-        base.OnInspectorGUI();
-
-        if (GUILayout.Button("Generate"))
-        {
-            pathGen.MarkDirty();
-        }
-    }
-}
 
 public class PathGen : MonoBehaviour
 {
@@ -41,6 +19,9 @@ public class PathGen : MonoBehaviour
     public enum Verb
     {
         Move,
+        Left,
+        Right,
+        Sprint,
         Jump,
         DoubleJump
         
@@ -82,22 +63,35 @@ public class PathGen : MonoBehaviour
     public float[] jumpLengths = { 0.8f, 1.6f };
     public Dictionary<Density, float> actionStepMappings = new()
     {
-        { Density.Low, 3.0f },
-        { Density.Medium, 2.0f },
-        { Density.High, 1.0f },
+        { Density.Low, 2.5f },
+        { Density.Medium, 1.5f },
+        { Density.High, 0.5f },
     };
 
-    Verb chooseRandomVerb()
+    Verb chooseValidVerb(bool canJump, bool canSprint)
     {
-        int rand = UnityEngine.Random.Range(0, 2);
-        if (rand == 1)
+        List<Verb> validVerbs = new List<Verb> {
+            Verb.Left,
+            Verb.Right
+        };
+
+        if (canJump)
         {
-            return Verb.Move;
+            validVerbs.Add(Verb.Jump);
+            validVerbs.Add(Verb.DoubleJump);
+            // hack to make jumping more likely
+            validVerbs.Add(Verb.Jump);
+            validVerbs.Add(Verb.DoubleJump);
+            validVerbs.Add(Verb.Jump);
+            validVerbs.Add(Verb.DoubleJump);
         }
-        else
-        {
-            return Verb.Jump;
+
+        if (canSprint) {
+            validVerbs.Add(Verb.Sprint);
         }
+
+        Distribution<Verb> distribution = new DiscreteUniformDistribution<Verb>(validVerbs.ToArray());
+        return distribution.Sample();
     }
 
     void Dump(object obj)
@@ -122,15 +116,34 @@ public class PathGen : MonoBehaviour
         points.Add(new Vector2(x, y_pos));
     }
 
+    void RenderActions(List<Action> actions)
+    {
+        if (!uiRenderer)
+        {
+            return;
+        }
+
+        var points = new List<Vector2>();
+        foreach (var action in actions)
+        {
+            Dump(action);
+            DrawNotch(points, action.startTime);
+            DrawLine(points, action.startTime, action.duration);
+        }
+
+        uiRenderer.points = points;
+    }
+
     List<Action> GenerateRandomRhythm(Density density, int length)
     {
         Debug.Log("Generating random rhythm density=" + density + ", length=" + length);
 
-        var lastJumpStartTime = 0f;
-        var lastJumpDuration = 1f; // No jumps in the first second >:(
+        var canJumpAfter = 1f;
+        var canSprintAfter = 0f;
 
         // Chose spacing between beats
-        float actionStep = actionStepMappings[density];
+        float baseStep = actionStepMappings[density];
+        Distribution<float> stepDistribution = new TriangularDistribution(0.5f * baseStep, 1.5f * baseStep);
 
         List<Action> actions = new List<Action>();
 
@@ -139,46 +152,31 @@ public class PathGen : MonoBehaviour
         actions.Add(new Action(Verb.Move, 0, length));
 
         float i = 0;
-        while (i < length)
-        {
-            var interval = Random.value * actionStep;
-            i += interval;
-            if (lastJumpStartTime + lastJumpDuration > i)
-            {
-                // If last jump is still happening, skip this beat
-                continue;
+        while (i < length) {
+            bool canJump = i > canJumpAfter;
+            bool canSprint = i > canSprintAfter;
+            
+            Verb verb = chooseValidVerb(canJump, canSprint);
+            float actionDuration = baseStep;
+
+
+            switch (verb) {
+                case Verb.Jump:
+                case Verb.DoubleJump:
+                    actionDuration = jumpLengths[(int)((UnityEngine.Random.value * 13) % 2)];
+                    canJumpAfter = i + actionDuration;
+                    break;
+                case Verb.Sprint:
+                    actionDuration = baseStep * 1.5f;
+                    canSprintAfter = i + actionDuration;
+                    break;
+                default:
+                    break;
             }
-            if (UnityEngine.Random.value < jumpFrequency)
-            {
-                // Add jump beat
-                lastJumpStartTime = i;
-                lastJumpDuration = jumpLengths[(int)((UnityEngine.Random.value * 13) % 2)];
-                float randomValue = UnityEngine.Random.value;
+           
+            actions.Add(new Action(verb, i, actionDuration));
 
-                if (randomValue < 0.5f)
-                {
-                    actions.Add(new Action(Verb.Jump, (float)lastJumpStartTime, lastJumpDuration));
-
-                }
-                else
-                {
-                    actions.Add(new Action(Verb.DoubleJump, (float)lastJumpStartTime, lastJumpDuration));
-
-                }
-            }
-        }
-
-        if (uiRenderer)
-        {
-            var points = new List<Vector2>();
-            foreach (var action in actions)
-            {
-                Dump(action);
-                DrawNotch(points, action.startTime);
-                DrawLine(points, action.startTime, action.duration);
-            }
-
-            uiRenderer.points = points;
+            i += stepDistribution.Sample();
         }
 
         return actions;
@@ -188,8 +186,8 @@ public class PathGen : MonoBehaviour
     {
         Debug.Log("Generating regular rhythm density=" + density + ", length=" + length);
 
-        var lastJumpStartTime = 0f;
-        var lastJumpDuration = 1f; // No jumps in the first second >:(
+        var canJumpAfter = 1f;
+        var canSprintAfter = 0f;
 
         // Chose spacing between beats
         float actionStep = actionStepMappings[density];
@@ -202,95 +200,82 @@ public class PathGen : MonoBehaviour
 
         for (float i = 0; i < length; i += actionStep)
         {
-            if (lastJumpStartTime + lastJumpDuration > i)
-            {
-                // If last jump is still happening, skip this beat
-                continue;
+            bool canJump = i > canJumpAfter;
+            bool canSprint = i > canSprintAfter;
+            
+            Verb verb = chooseValidVerb(canJump, canSprint);
+            float actionDuration = actionStep;
+
+
+            switch (verb) {
+                case Verb.Jump:
+                case Verb.DoubleJump:
+                    actionDuration = jumpLengths[(int)((UnityEngine.Random.value * 13) % 2)];
+                    canJumpAfter = i + actionDuration;
+                    break;
+                case Verb.Sprint:
+                    actionDuration = actionStep * 1.5f;
+                    canSprintAfter = i + actionDuration;
+                    break;
+                default:
+                    break;
             }
-            if (UnityEngine.Random.value < jumpFrequency)
-            {
-                // Add jump beat
-                lastJumpStartTime = i;
-                lastJumpDuration = jumpLengths[(int)((UnityEngine.Random.value * 13) % 2)];
-                float randomValue = UnityEngine.Random.value;
-                if(randomValue < 0.5f)
-                {
-                    actions.Add(new Action(Verb.Jump, (float)lastJumpStartTime, lastJumpDuration));
-
-                }
-                else
-                {
-                    actions.Add(new Action(Verb.DoubleJump, (float)lastJumpStartTime, lastJumpDuration));
-
-                }
-            }
-
-        }
-
-        if (uiRenderer)
-        {
-            var points = new List<Vector2>();
-            foreach (var action in actions)
-            {
-                Dump(action);
-                DrawNotch(points, action.startTime);
-                DrawLine(points, action.startTime, action.duration);
-            }
-
-            uiRenderer.points = points;
+           
+            actions.Add(new Action(verb, i, actionDuration));
         }
 
         return actions;
+
     }
 
     List<Action> GenerateSwingRhythm(Density density, int length)
     {
         Debug.Log("Generating swing rhythm density=" + density + ", length=" + length);
 
-        var lastJumpStartTime = 0f;
-        var lastJumpDuration = 1f; // No jumps in the first second >:(
+        var canJumpAfter = 1f;
+        var canSprintAfter = 0f;
 
         // Chose spacing between beats
         float actionStep = actionStepMappings[density];
+        float swingStep = actionStep * 0.125f; // 1/8th of a beat
 
         List<Action> actions = new List<Action>();
 
-        // Add initial move beat for the entire duration
+        // Add initial move beat for entire duration
         // TODO: Allow pausing/waiting like in (Smith et al., 2009)
         actions.Add(new Action(Verb.Move, 0, length));
 
-        for (float i = 0; i < length; i += actionStep)
-        {
-            if (lastJumpStartTime + lastJumpDuration > i)
-            {
-                // If the last jump is still happening, skip this beat
-                continue;
+        bool isSwingStep = false;
+        float i = 0;
+        while (i < length) {
+            
+
+            bool canJump = i > canJumpAfter;
+            bool canSprint = i > canSprintAfter;
+            
+            Verb verb = chooseValidVerb(canJump, canSprint);
+            float actionDuration = actionStep;
+
+
+            switch (verb) {
+                case Verb.Jump:
+                case Verb.DoubleJump:
+                    actionDuration = jumpLengths[(int)((UnityEngine.Random.value * 13) % 2)];
+                    canJumpAfter = i + actionDuration;
+                    break;
+                case Verb.Sprint:
+                    actionDuration = actionStep * 1.5f;
+                    canSprintAfter = i + actionDuration;
+                    break;
+                default:
+                    break;
             }
+           
+            actions.Add(new Action(verb, i, actionDuration));
 
-            if (UnityEngine.Random.value < jumpFrequency)
-            {
-                // Add jump beat
-                lastJumpStartTime = i;
-
-                // Calculate the duration for the swing beat
-                float swingDuration = actionStep * (1.5f + UnityEngine.Random.value * 0.5f); // Adjust swing factor as needed
-
-                lastJumpDuration = swingDuration;
-                actions.Add(new Action(Verb.Jump, (float)lastJumpStartTime, lastJumpDuration));
-            }
-        }
-
-        if (uiRenderer)
-        {
-            var points = new List<Vector2>();
-            foreach (var action in actions)
-            {
-                Dump(action);
-                DrawNotch(points, action.startTime);
-                DrawLine(points, action.startTime, action.duration);
-            }
-
-            uiRenderer.points = points;
+            var stepDuration = isSwingStep ? swingStep : actionStep;
+            i += stepDuration;
+            isSwingStep = !isSwingStep;
         }
 
         return actions;
@@ -298,13 +283,14 @@ public class PathGen : MonoBehaviour
 
     public List<Action> GenerateRhythm(Pattern type, Density density, int length)
     {
-        return type switch
-        {
+        List<Action> actions = type switch {
             Pattern.Regular => GenerateRegularRhythm(density, length),
             Pattern.Random => GenerateRandomRhythm(density, length),
             Pattern.Swing => GenerateSwingRhythm(density, length),
             _ => GenerateRegularRhythm(density, length),
         };
+        RenderActions(actions);
+        return actions;
     }
 
     public int GetArrayHash(float[] array)
