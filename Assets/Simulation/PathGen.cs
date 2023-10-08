@@ -307,7 +307,7 @@ public class PathGen : MonoBehaviour
     public void MarkDirty()
     {
         _actions = GenerateRhythm(pattern, density, length);
-        uiRenderer.SetVerticesDirty();
+        uiRenderer?.SetVerticesDirty();
     }
 
     public List<Action> GetRhythm()
