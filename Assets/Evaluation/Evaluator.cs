@@ -12,6 +12,7 @@ namespace Evaluation
         public static void SetEvalKey(string base64)
         {
             Key = EvalKey.Decode(base64);
+            Key.Print();
         }
     }
 }
