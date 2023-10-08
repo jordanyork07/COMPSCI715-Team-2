@@ -16,6 +16,11 @@ public class LevelManager : MonoBehaviour
     public int numberOfLevels = 1;
     public int activeLevel = 0;
     public List<GameObject> levels = new(); 
+
+    public bool useOrder = false;
+    private int orderedLevelIndex = 0;
+    public List<int> order = new();
+
     void Start()
     {
         var fitter = GetComponent<PathFitter>();
@@ -111,12 +116,27 @@ public class LevelManager : MonoBehaviour
 
     public void Restart()
     {
-        GoToLevel(0);
+        if (useOrder &&  order.Count == numberOfLevels)
+        {
+            GoToLevel(order[0]);
+            orderedLevelIndex = 1;  
+        }
+        else 
+        {
+            GoToLevel(0);
+        }
     }
     
     public void NextSimulation()
-    {
-        GoToLevel((activeLevel + 1) % numberOfLevels);
+    {   
+        if (useOrder && orderedLevelIndex < order.Count && order.Count == numberOfLevels)
+        {
+            GoToLevel(order[orderedLevelIndex++]);
+        }
+        else 
+        {
+            GoToLevel((activeLevel + 1) % numberOfLevels);
+        }
     }
 
     
