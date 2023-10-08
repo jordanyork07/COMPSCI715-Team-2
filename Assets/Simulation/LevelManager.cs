@@ -60,6 +60,12 @@ public class LevelManager : MonoBehaviour
 
     void Update() 
     {
+        if (useOrder && order.Count == numberOfLevels)
+        
+        {
+            if (orderedLevelIndex >= order.Count) orderedLevelIndex = 0;
+            if (order[orderedLevelIndex] != activeLevel) GoToLevel(order[orderedLevelIndex]);
+        }
         // Calling InitializeLevels causes funk
     }
 
@@ -116,10 +122,10 @@ public class LevelManager : MonoBehaviour
 
     public void Restart()
     {
-        if (useOrder &&  order.Count == numberOfLevels)
+        if (useOrder && order.Count == numberOfLevels)
         {
             GoToLevel(order[0]);
-            orderedLevelIndex = 1;  
+            orderedLevelIndex = 0;  
         }
         else 
         {
