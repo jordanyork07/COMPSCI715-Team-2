@@ -34,8 +34,12 @@ public class UI : MonoBehaviour
     public void LoadScene()
     {   
         Debug.Log("LoadScene");
-        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        int nextSceneIndex = currentSceneIndex + 1;
-        SceneManager.LoadScene(nextSceneIndex);
+        // int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        // int nextSceneIndex = currentSceneIndex + 1;
+        // get scene name level_1 etc and increment and load
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        string nextScene = currentSceneName.Split('_')[0] + "_" + (int.Parse(currentSceneName.Split('_')[1]) + 1);
+        Debug.Log(nextScene);
+        SceneManager.LoadScene(nextScene);
     }
 }
