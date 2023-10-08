@@ -180,7 +180,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 1c3dba896ee7a4b2d95b4981ca90b837, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -546,6 +546,7 @@ GameObject:
   - component: {fileID: 383852602}
   - component: {fileID: 383852601}
   - component: {fileID: 383852600}
+  - component: {fileID: 383852603}
   m_Layer: 0
   m_Name: Continue
   m_TagString: Untagged
@@ -617,9 +618,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2099006441}
-        m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
-        m_MethodName: Play
+      - m_Target: {fileID: 383852603}
+        m_TargetAssemblyTypeName: Evaluation.EvalKeySubmitter, Assembly-CSharp
+        m_MethodName: Clicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -667,6 +668,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 383852598}
   m_CullTransparentMesh: 1
+--- !u!114 &383852603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 383852598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e64b9415aa784d548247d253e228af37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  error: {fileID: 316464773}
+  input: {fileID: 1235280665}
 --- !u!1 &427837634
 GameObject:
   m_ObjectHideFlags: 0
@@ -1746,7 +1761,6 @@ GameObject:
   - component: {fileID: 1235280667}
   - component: {fileID: 1235280666}
   - component: {fileID: 1235280665}
-  - component: {fileID: 1235280668}
   m_Layer: 0
   m_Name: Input
   m_TagString: Untagged
@@ -1854,7 +1868,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1235280668}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Evaluation.EvalKeyInputField, Assembly-CSharp
         m_MethodName: OnChangedInputField
         m_Mode: 5
@@ -1922,19 +1936,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1235280663}
   m_CullTransparentMesh: 1
---- !u!114 &1235280668
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1235280663}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e64b9415aa784d548247d253e228af37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  error: {fileID: 316464773}
 --- !u!1 &1259093883
 GameObject:
   m_ObjectHideFlags: 0

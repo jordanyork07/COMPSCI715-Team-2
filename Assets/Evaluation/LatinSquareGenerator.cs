@@ -1,86 +1,67 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
+using Random = System.Random;
 
 namespace Evaluation
 {
     public abstract class LatinSquareGenerator
     {
+        private static readonly int[] Numbers = { 1, 2, 3, 4, 5 };
+        
         public static void Generate()
         {
-            int width = 5;
-            int height = 3;
-            int[,] latinSquare = new int[height, width];
-            GenerateLatinSquares(latinSquare, 0, 0);
+            var latinSquares = GenerateLatinSquares();
+
+            var strBuild = new StringBuilder();
+            foreach (var ls in latinSquares)
+                strBuild.AppendLine(ls.Encode());
+            
+            Debug.Log(strBuild.ToString());
         }
 
-        public static void GenerateLatinSquares(int[,] latinSquare, int row, int col)
+        private static IEnumerable<EvalKey> GenerateLatinSquares()
         {
-            int height = latinSquare.GetLength(0);
-            int width = latinSquare.GetLength(1);
-
-            if (row == height)
+            for (int i = 0; i < 50; i++)
             {
-                // Print the Latin Square
-                PrintLatinSquare(latinSquare);
-            }
-            else
-            {
-                for (int num = 1; num <= width; num++)
-                {
-                    if (IsSafe(latinSquare, row, col, num))
-                    {
-                        latinSquare[row, col] = num;
-
-                        int nextRow = row;
-                        int nextCol = col + 1;
-
-                        if (nextCol == width)
-                        {
-                            nextRow++;
-                            nextCol = 0;
-                        }
-
-                        GenerateLatinSquares(latinSquare, nextRow, nextCol);
-
-                        latinSquare[row, col] = 0; // Backtrack
-                    }
-                }
+                yield return GenerateLatinSquare(i);
             }
         }
 
-        public static bool IsSafe(int[,] latinSquare, int row, int col, int num)
+        private static EvalKey GenerateLatinSquare(int seed)
         {
-            int height = latinSquare.GetLength(0);
-            int width = latinSquare.GetLength(1);
+            Random rand = new Random(seed);
+            int[,] square = new int[3, 5];
+            
+            // deep copy Numbers
+            var numbers = new List<int>(Numbers);
 
-            // Check if 'num' is already present in the current row or column
-            for (int i = 0; i < width; i++)
+            // Fill the first row with random numbers
+            for (int i = 0; i < 5; i++)
             {
-                if (latinSquare[row, i] == num || latinSquare[i, col] == num)
-                {
-                    return false;
-                }
+                var index = rand.Next(0, numbers.Count);
+                square[0, i] = numbers[index];
+                numbers.RemoveAt(index);
             }
 
-            return true;
-        }
-
-        private static void PrintLatinSquare(int[,] latinSquare)
-        {
-            int height = latinSquare.GetLength(0);
-            int width = latinSquare.GetLength(1);
-
-            EvalKey key = new EvalKey { LatinSquare = new int[height, width] };
-            for (int i = 0; i < height; i++)
+            // Fill the second row with shifted numbers from the first row
+            for (int i = 0; i < 5; i++)
             {
-                for (int j = 0; j < width; j++)
-                {
-                    key.LatinSquare[i, j] = latinSquare[i, j];
-                }
+                square[1, i] = square[0, (i + 1) % 5];
             }
 
-            key.Print();
+            // Fill the third row with shifted numbers from the second row
+            for (int i = 0; i < 5; i++)
+            {
+                square[2, i] = square[1, (i + 1) % 5];
+            }
+
+            return new EvalKey
+            {
+                LatinSquare = square
+            };
         }
     }
 }

@@ -6,14 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    public void Play()
-    {
-        if (Evaluator.Key != null)
-        {
-            SceneManager.LoadScene("mjak923_PlayerController");    
-        }
-    }
-
     public void Quit()
     {
         Application.Quit();

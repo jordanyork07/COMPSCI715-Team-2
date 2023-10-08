@@ -1,32 +1,29 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Evaluation
 {
-    public class EvalKeyInputField : MonoBehaviour
+    public class EvalKeySubmitter : MonoBehaviour
     {
         public GameObject error;
+        public TMP_InputField input;
 
-        public void Start()
-        {
-            Debug.Log("Generating Latin Squares");
-            
-            LatinSquareGenerator.Generate();
-        }
-
-        public void OnChangedInputField(string input)
+        public void Clicked()
         {
             error.gameObject.SetActive(false);
             
             try
             {
-                Evaluator.SetEvalKey(input);
+                Evaluator.SetEvalKey(input.text);
+                SceneManager.LoadScene("mjak923_PlayerController");
             }
-            catch
+            catch (Exception e)
             {
                 error.gameObject.SetActive(true);
+                Debug.LogException(e);
             }
         }
     }
