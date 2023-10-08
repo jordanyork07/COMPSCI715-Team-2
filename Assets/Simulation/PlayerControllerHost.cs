@@ -4,9 +4,7 @@ using UnityEngine;
 using Evaluation;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.XR;
 using static PlayerController;
-using static UnityEditor.PlayerSettings;
 #endif
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks

@@ -212,7 +212,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Times Up!
+  m_text: Complete!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -681,7 +681,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000066546, y: 4.077}
+  m_AnchoredPosition: {x: 0.00000018947, y: 46}
   m_SizeDelta: {x: 1158.2, y: 324.854}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1144199997
@@ -704,12 +704,16 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'You will be given a five levels to complete. At the end of each level,
-    landing on the green platform will teleport you to the start of the next level.
+  m_text: 'Next Up:
 
 
-    You
-    have five minutes in total. Aim to complete as many levels as you can.'
+    You will be given another five levels of a different type
+    to complete. At the end of each level, landing on the green platform will teleport
+    you to the start of the next level.
+
+
+    You have five minutes in total. Aim
+    to complete as many levels as you can.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1219,10 +1223,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 670244994}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -4.9229736, y: 24.61499}
-  m_SizeDelta: {x: -694.153, y: -728.615}
+  m_SizeDelta: {x: 1225.8469, y: 395.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2094870652
 MonoBehaviour:

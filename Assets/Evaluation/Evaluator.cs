@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DefaultNamespace;
 using UnityEngine.SceneManagement;
 
 namespace Evaluation
@@ -37,15 +38,15 @@ namespace Evaluation
         public static void LoadNextScene()
         {
             if (_queuedScenes.TryDequeue(out var sceneName))
-                SceneManager.LoadScene(sceneName);
+                SceneLoader.BruteForceSceneLoad(sceneName);
         }
 
         public static void LoadNextInterimScene()
         {
             if (_queuedScenes.TryPeek(out var sceneName))
-                SceneManager.LoadScene("timesupscreen");
+                SceneLoader.BruteForceSceneLoad("timesupscreen");
             else
-                SceneManager.LoadScene("fin");
+                SceneLoader.BruteForceSceneLoad("fin");
         }
     }
 }

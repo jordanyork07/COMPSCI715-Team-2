@@ -1,3 +1,4 @@
+using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,7 +8,7 @@ namespace Evaluation
     {
         public void GoToScene(string scene)
         {
-            SceneManager.LoadScene(scene);
+            SceneLoader.BruteForceSceneLoad(scene);
             Cursor.lockState = CursorLockMode.None;
         }
 
