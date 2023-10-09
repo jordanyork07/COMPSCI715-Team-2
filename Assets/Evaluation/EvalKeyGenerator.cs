@@ -5,7 +5,7 @@ namespace Evaluation
 {
     public abstract class EvalKeyGenerator
     {
-        public static void Generate()
+        public static string Generate()
         {
             // latin "rectangle"
             var square = new int[6, 3] {
@@ -29,6 +29,7 @@ namespace Evaluation
             }
             
             Debug.Log(strBuild);
+            return strBuild.ToString();
         }
     }
 }
