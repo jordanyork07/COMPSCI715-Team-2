@@ -101,7 +101,9 @@ public class LevelManager : MonoBehaviour
     }
 
     private void GoToLevel(int level)
-    {
+    {   
+        Evaluation.Logger.LogByEvalKey(Evaluator.Key, "GoToLevel " + level);
+
         if (level < numberOfLevels) {
 
             levels[activeLevel].SetActive(false);
