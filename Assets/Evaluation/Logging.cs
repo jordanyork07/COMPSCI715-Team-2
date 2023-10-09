@@ -7,7 +7,7 @@ namespace Evaluation
     {
         private static float GetGameTime()
         {
-            return Time.realtimeSinceStartup;
+            return Time.time;
         }
 
         public static void LogByEvalKey(EvalKey evalKey, string append)
