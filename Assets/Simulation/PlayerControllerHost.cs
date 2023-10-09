@@ -113,19 +113,19 @@ public class PlayerControllerHost : MonoBehaviour
         }
         if (Input.GetKeyUp("w"))
         {
-            Evaluation.Logger.LogByEvalKey(Evaluator.Key, " W key was pressed");
+            Evaluation.Logger.LogByEvalKey(Evaluator.Key, " W");
         }
         else if (Input.GetKeyUp("space"))
         {
-            Evaluation.Logger.LogByEvalKey(Evaluator.Key, " space key was pressed");
+            Evaluation.Logger.LogByEvalKey(Evaluator.Key, " space");
         }
         else if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            Evaluation.Logger.LogByEvalKey(Evaluator.Key, " shift down key was pressed");
+            Evaluation.Logger.LogByEvalKey(Evaluator.Key, " shift down");
         }
         else if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            Evaluation.Logger.LogByEvalKey(Evaluator.Key, " shift up key was pressed");
+            Evaluation.Logger.LogByEvalKey(Evaluator.Key, " shift up");
         }
     }
 
