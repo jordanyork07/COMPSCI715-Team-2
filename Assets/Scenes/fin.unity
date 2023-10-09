@@ -683,7 +683,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000066546, y: 4.077}
+  m_AnchoredPosition: {x: -0.000066546, y: 46}
   m_SizeDelta: {x: 1158.2, y: 324.854}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1144199997
@@ -706,9 +706,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "The user study is now complete. \n\nPlease provide the text file titled
-    'eval-file-{ID}.txt' to the Group 2 member supervising this trial.\n\nThank you
-    very much!"
+  m_text: "The user study is now complete. \n\nPlease fill out the survey for this
+    round.\n\nPlease provide the text file titled 'eval-file-{ID}.txt' to the Group
+    2 member supervising this trial.\n\nThank you very much!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1218,10 +1218,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 670244994}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -4.9229736, y: 24.61499}
-  m_SizeDelta: {x: -694.153, y: -728.615}
+  m_SizeDelta: {x: 1225.8469, y: 426.61}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2094870652
 MonoBehaviour:
