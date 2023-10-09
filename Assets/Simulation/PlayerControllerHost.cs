@@ -4,9 +4,7 @@ using UnityEngine;
 using Evaluation;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.XR;
 using static PlayerController;
-using static UnityEditor.PlayerSettings;
 #endif
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
@@ -107,7 +105,7 @@ public class PlayerControllerHost : MonoBehaviour
         _delegate.Tick(fixedTime, deltaTime, (n) => { }, true);
         var currentTime = DateTime.Now;
         // Fall prevention
-        if (transform.position.y < -100)
+        if (transform.position.y < -50)
         {   
             
             Evaluation.Logger.LogByEvalKey(Evaluator.Key, " Player fell");

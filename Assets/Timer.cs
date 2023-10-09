@@ -31,7 +31,8 @@ public class Timer : MonoBehaviour
             remainingTime = 0;
             Evaluation.Logger.LogByEvalKey(Evaluator.Key, " Timer Ended!");
 
-            SceneManager.LoadScene("timesupscreen");
+            Evaluator.LoadNextInterimScene();
+            Cursor.lockState = CursorLockMode.None;
         }
         int minutes = Mathf.FloorToInt(remainingTime / 60);
         int seconds = Mathf.FloorToInt(remainingTime % 60);

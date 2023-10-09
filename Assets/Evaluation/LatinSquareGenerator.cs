@@ -14,15 +14,9 @@ namespace Evaluation
         public static void Generate()
         {
             var latinSquares = GenerateLatinSquares();
-
-            var strBuild = new StringBuilder();
-            foreach (var ls in latinSquares)
-                strBuild.AppendLine(ls.Encode());
-            
-            Debug.Log(strBuild.ToString());
         }
 
-        private static IEnumerable<EvalKey> GenerateLatinSquares()
+        private static IEnumerable<int[,]> GenerateLatinSquares()
         {
             for (int i = 0; i < 50; i++)
             {
@@ -30,7 +24,7 @@ namespace Evaluation
             }
         }
 
-        private static EvalKey GenerateLatinSquare(int seed)
+        private static int[,] GenerateLatinSquare(int seed)
         {
             Random rand = new Random(seed);
             int[,] square = new int[3, 5];
@@ -58,10 +52,7 @@ namespace Evaluation
                 square[2, i] = square[1, (i + 1) % 5];
             }
 
-            return new EvalKey
-            {
-                LatinSquare = square
-            };
+            return square;
         }
     }
 }

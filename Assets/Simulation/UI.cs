@@ -1,3 +1,4 @@
+using DefaultNamespace;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -31,6 +32,7 @@ public class UI : MonoBehaviour
         Time.timeScale = 0;
         menu.SetActive(true);
     }
+    
     public void LoadScene()
     {   
         Debug.Log("LoadScene");
@@ -40,6 +42,6 @@ public class UI : MonoBehaviour
         string currentSceneName = SceneManager.GetActiveScene().name;
         string nextScene = currentSceneName.Split('_')[0] + "_" + (int.Parse(currentSceneName.Split('_')[1]) + 1);
         Debug.Log(nextScene);
-        SceneManager.LoadScene(nextScene);
+        SceneLoader.BruteForceSceneLoad(nextScene);
     }
 }

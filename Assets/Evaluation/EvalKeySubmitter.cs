@@ -1,4 +1,5 @@
 using System;
+using DefaultNamespace;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -18,7 +19,7 @@ namespace Evaluation
             try
             {
                 Evaluator.SetEvalKey(input.text);
-                SceneManager.LoadScene("mjak923_PlayerController");
+                SceneLoader.BruteForceSceneLoad("tutorial-ready");
                 Evaluator.Key.Print();
             }
             catch (Exception e)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using static PlayerController;
 using System;
 using System.Linq;
+using Evaluation;
 using Simulation;
 using static PlayerSimulator;
 
@@ -16,10 +17,6 @@ public class LevelManager : MonoBehaviour
     public int numberOfLevels = 1;
     public int activeLevel = 0;
     public List<GameObject> levels = new(); 
-
-    public bool useOrder = false;
-    private int orderedLevelIndex = 0;
-    public List<int> order = new();
 
     void Start()
     {
@@ -60,13 +57,6 @@ public class LevelManager : MonoBehaviour
 
     void Update() 
     {
-        if (useOrder && order.Count == numberOfLevels)
-        
-        {
-            if (orderedLevelIndex >= order.Count) orderedLevelIndex = 0;
-            if (order[orderedLevelIndex] != activeLevel) GoToLevel(order[orderedLevelIndex]);
-        }
-        // Calling InitializeLevels causes funk
     }
 
     
@@ -122,27 +112,15 @@ public class LevelManager : MonoBehaviour
 
     public void Restart()
     {
-        if (useOrder && order.Count == numberOfLevels)
-        {
-            GoToLevel(order[0]);
-            orderedLevelIndex = 0;  
-        }
-        else 
-        {
-            GoToLevel(0);
-        }
+        GoToLevel(0);
     }
     
     public void NextSimulation()
-    {   
-        if (useOrder && orderedLevelIndex < order.Count && order.Count == numberOfLevels)
-        {
-            GoToLevel(order[orderedLevelIndex++]);
-        }
-        else 
-        {
-            GoToLevel((activeLevel + 1) % numberOfLevels);
-        }
+    {
+        if (activeLevel + 1 < numberOfLevels)
+            GoToLevel(activeLevel + 1);
+        else
+            Evaluator.LoadNextInterimScene();
     }
 
     
