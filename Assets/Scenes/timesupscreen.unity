@@ -681,7 +681,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00000018947, y: 46}
+  m_AnchoredPosition: {x: 0.00000018947, y: -21}
   m_SizeDelta: {x: 1158.2, y: 324.854}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1144199997
@@ -704,16 +704,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Next Up:
+  m_text: 'Please fill out the survey for this round.
 
 
-    You will be given another five levels of a different type
-    to complete. At the end of each level, landing on the green platform will teleport
-    you to the start of the next level.
-
-
-    You have five minutes in total. Aim
-    to complete as many levels as you can.'
+    Next Up: You will be
+    given another five levels of a different type to complete. You have five minutes
+    in total. Aim to complete as many levels as you can.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
