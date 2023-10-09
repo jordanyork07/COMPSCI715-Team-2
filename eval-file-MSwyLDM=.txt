@@ -1,0 +1,518 @@
+[7.527197]  shift down key was pressed
+[8.017703]  space key was pressed
+[8.377777]  shift up key was pressed
+[8.671962]  shift down key was pressed
+[9.885573]  space key was pressed
+[10.02151]  shift up key was pressed
+[10.13609]  W key was pressed
+[10.51677]  W key was pressed
+[10.7629]  W key was pressed
+[11.16859]  W key was pressed
+[11.33668]  shift down key was pressed
+[11.71291]  space key was pressed
+[12.7223]  shift up key was pressed
+[12.77664]  W key was pressed
+[13.48573]  W key was pressed
+[13.84771]  shift down key was pressed
+[14.13846]  space key was pressed
+[15.60349]  space key was pressed
+[15.91574]  shift up key was pressed
+[16.20861]  W key was pressed
+[16.72631]  W key was pressed
+[20.73618]  Timer Started!
+[21.49633]  shift down key was pressed
+[21.788]  space key was pressed
+[22.21657]  shift up key was pressed
+[22.89472]  shift down key was pressed
+[23.34319]  space key was pressed
+[23.94865]  space key was pressed
+[24.07467]  shift up key was pressed
+[24.26373]  W key was pressed
+[36.30547]  shift down key was pressed
+[36.57173]  space key was pressed
+[36.86344]  shift up key was pressed
+[36.89803]  W key was pressed
+[37.3603]  shift down key was pressed
+[37.6076]  space key was pressed
+[38.28178]  space key was pressed
+[38.39751]  W key was pressed
+[38.41778]  shift up key was pressed
+[38.78007]  W key was pressed
+[39.02369]  shift down key was pressed
+[39.45346]  space key was pressed
+[40.02836]  space key was pressed
+[40.23074]  space key was pressed
+[41.99408]  space key was pressed
+[43.34871]  space key was pressed
+[44.62835]  space key was pressed
+[46.52143]  space key was pressed
+[48.43237]  space key was pressed
+[49.69024]  shift down key was pressed
+[50.16443]  space key was pressed
+[51.15284]  space key was pressed
+[52.57224]  space key was pressed
+[53.29149]  space key was pressed
+[55.0714]  space key was pressed
+[56.08176]  space key was pressed
+[56.44207]  shift up key was pressed
+[56.58593]  W key was pressed
+[56.84576]  shift down key was pressed
+[57.1413]  space key was pressed
+[57.99346]  space key was pressed
+[58.13184]  shift up key was pressed
+[58.6224]  shift down key was pressed
+[59.34203]  space key was pressed
+[60.46737]  space key was pressed
+[61.23288]  space key was pressed
+[61.90862]  space key was pressed
+[62.25724]  shift up key was pressed
+[62.27248]  W key was pressed
+[64.80635]  Player fell
+[64.80738]  Player fell
+[64.80825]  Player fell
+[64.80905]  Player fell
+[64.80982]  Player fell
+[64.81053]  Player fell
+[64.81133]  Player fell
+[67.37669]  shift down key was pressed
+[68.00611]  space key was pressed
+[68.34341]  W key was pressed
+[68.58276]  shift up key was pressed
+[68.99661]  shift down key was pressed
+[69.98543]  space key was pressed
+[70.40308]  space key was pressed
+[70.59447]  W key was pressed
+[71.33842]  space key was pressed
+[71.71851]  shift up key was pressed
+[71.72949]  W key was pressed
+[71.96959]  shift down key was pressed
+[72.25745]  space key was pressed
+[72.95692]  space key was pressed
+[73.02391]  shift up key was pressed
+[73.03455]  W key was pressed
+[73.54258]  shift down key was pressed
+[73.68849]  W key was pressed
+[73.71347]  shift up key was pressed
+[73.88991]  shift down key was pressed
+[74.21558]  space key was pressed
+[74.96077]  space key was pressed
+[76.57898]  space key was pressed
+[77.50008]  space key was pressed
+[77.5934]  W key was pressed
+[77.61414]  shift up key was pressed
+[78.2204]  W key was pressed
+[78.68452]  W key was pressed
+[79.07779]  space key was pressed
+[79.45919]  W key was pressed
+[79.66155]  W key was pressed
+[80.11115]  W key was pressed
+[80.33631]  shift down key was pressed
+[80.85479]  space key was pressed
+[81.61983]  space key was pressed
+[82.87014]  space key was pressed
+[84.25136]  space key was pressed
+[85.12913]  space key was pressed
+[86.61584]  space key was pressed
+[87.46911]  space key was pressed
+[88.84205]  space key was pressed
+[89.80951]  space key was pressed
+[90.0796]  shift up key was pressed
+[90.64198]  shift down key was pressed
+[90.95872]  space key was pressed
+[91.72211]  space key was pressed
+[91.77809]  shift up key was pressed
+[93.05186]  shift down key was pressed
+[93.59049]  space key was pressed
+[94.80771]  space key was pressed
+[95.30173]  shift up key was pressed
+[96.08782]  shift down key was pressed
+[96.33517]  space key was pressed
+[96.80771]  shift up key was pressed
+[97.88853]  shift down key was pressed
+[98.14323]  space key was pressed
+[98.6989]  space key was pressed
+[98.87928]  shift up key was pressed
+[98.94467]  W key was pressed
+[99.59848]  W key was pressed
+[100.273]  shift down key was pressed
+[100.8124]  space key was pressed
+[100.951]  W key was pressed
+[101.5908]  shift down key was pressed
+[102.1404]  space key was pressed
+[103.1106]  W key was pressed
+[103.5352]  space key was pressed
+[103.6924]  W key was pressed
+[104.5041]  space key was pressed
+[104.6721]  W key was pressed
+[104.9109]  shift up key was pressed
+[105.0912]  shift down key was pressed
+[105.4251]  space key was pressed
+[106.2607]  space key was pressed
+[106.6214]  W key was pressed
+[107.3217]  space key was pressed
+[108.3056]  space key was pressed
+[111.0756]  space key was pressed
+[111.726]  space key was pressed
+[111.7371]  W key was pressed
+[111.8041]  shift up key was pressed
+[112.1552]  W key was pressed
+[112.4712]  W key was pressed
+[112.8972]  shift down key was pressed
+[113.1016]  space key was pressed
+[113.8635]  space key was pressed
+[116.0255]  space key was pressed
+[117.3332]  space key was pressed
+[118.4136]  space key was pressed
+[119.1962]  space key was pressed
+[121.0183]  space key was pressed
+[121.7841]  space key was pressed
+[121.8191]  W key was pressed
+[122.1237]  W key was pressed
+[122.1552]  shift up key was pressed
+[122.5743]  shift down key was pressed
+[122.8187]  space key was pressed
+[123.5185]  space key was pressed
+[124.6439]  space key was pressed
+[125.766]  space key was pressed
+[126.5551]  space key was pressed
+[127.636]  space key was pressed
+[128.5805]  space key was pressed
+[129.5255]  space key was pressed
+[129.7747]  shift up key was pressed
+[129.85]  W key was pressed
+[130.5158]  W key was pressed
+[131.7549]  shift down key was pressed
+[132.091]  space key was pressed
+[132.2923]  shift up key was pressed
+[132.3481]  W key was pressed
+[132.4153]  W key was pressed
+[132.8088]  W key was pressed
+[133.2047]  shift down key was pressed
+[133.5063]  space key was pressed
+[134.0693]  space key was pressed
+[134.2496]  shift up key was pressed
+[134.251]  W key was pressed
+[135.1968]  shift down key was pressed
+[135.5112]  space key was pressed
+[135.7363]  W key was pressed
+[136.0719]  shift down key was pressed
+[136.1165]  W key was pressed
+[136.1617]  shift up key was pressed
+[136.2765]  shift down key was pressed
+[136.567]  space key was pressed
+[137.2191]  space key was pressed
+[137.6694]  W key was pressed
+[137.7592]  shift up key was pressed
+[138.1193]  shift down key was pressed
+[138.3918]  space key was pressed
+[139.4461]  space key was pressed
+[140.7764]  space key was pressed
+[141.2815]  W key was pressed
+[141.4276]  W key was pressed
+[142.0471]  space key was pressed
+[142.2158]  W key was pressed
+[143.2758]  space key was pressed
+[144.0372]  space key was pressed
+[145.1864]  space key was pressed
+[146.7141]  space key was pressed
+[147.358]  space key was pressed
+[148.4283]  space key was pressed
+[149.1228]  space key was pressed
+[150.6753]  space key was pressed
+[151.7549]  space key was pressed
+[152.8126]  space key was pressed
+[153.8488]  space key was pressed
+[154.6351]  space key was pressed
+[154.9093]  W key was pressed
+[155.9404]  space key was pressed
+[156.9786]  space key was pressed
+[157.5607]  space key was pressed
+[158.5506]  space key was pressed
+[158.8034]  W key was pressed
+[159.2366]  W key was pressed
+[159.2616]  shift up key was pressed
+[160.0016]  shift down key was pressed
+[160.2603]  space key was pressed
+[160.4415]  W key was pressed
+[160.7329]  shift up key was pressed
+[161.612]  W key was pressed
+[162.7832]  shift down key was pressed
+[163.0167]  space key was pressed
+[163.9321]  space key was pressed
+[164.6933]  W key was pressed
+[165.0762]  space key was pressed
+[166.0934]  space key was pressed
+[166.6326]  space key was pressed
+[167.2624]  space key was pressed
+[168.2481]  space key was pressed
+[168.4971]  shift up key was pressed
+[168.4987]  W key was pressed
+[168.9244]  W key was pressed
+[174.988]  shift down key was pressed
+[175.9234]  space key was pressed
+[176.8667]  space key was pressed
+[177.9243]  W key was pressed
+[178.3062]  W key was pressed
+[178.3289]  space key was pressed
+[179.0493]  space key was pressed
+[179.9942]  space key was pressed
+[181.5938]  space key was pressed
+[182.336]  space key was pressed
+[183.6052]  space key was pressed
+[183.7982]  W key was pressed
+[184.0014]  W key was pressed
+[184.8774]  space key was pressed
+[185.665]  space key was pressed
+[186.9699]  space key was pressed
+[188.0751]  space key was pressed
+[189.0401]  space key was pressed
+[189.8959]  space key was pressed
+[190.8439]  space key was pressed
+[191.2011]  W key was pressed
+[192.2132]  space key was pressed
+[193.0235]  space key was pressed
+[193.836]  space key was pressed
+[194.7323]  space key was pressed
+[194.8002]  W key was pressed
+[194.9577]  shift up key was pressed
+[195.2277]  shift down key was pressed
+[195.3859]  W key was pressed
+[195.3969]  shift up key was pressed
+[195.7235]  shift down key was pressed
+[195.7919]  W key was pressed
+[195.8464]  shift up key was pressed
+[195.9135]  shift down key was pressed
+[196.2661]  space key was pressed
+[197.0732]  W key was pressed
+[197.1397]  shift up key was pressed
+[197.7721]  shift down key was pressed
+[198.0865]  space key was pressed
+[198.2666]  shift up key was pressed
+[198.268]  W key was pressed
+[198.6485]  W key was pressed
+[198.8723]  shift down key was pressed
+[199.3694]  space key was pressed
+[200.0881]  space key was pressed
+[200.1474]  W key was pressed
+[201.4398]  space key was pressed
+[202.4731]  space key was pressed
+[202.4841]  W key was pressed
+[202.6528]  shift up key was pressed
+[205.2573]  Player fell
+[205.2585]  Player fell
+[205.2596]  Player fell
+[205.2606]  Player fell
+[205.2616]  Player fell
+[205.2626]  Player fell
+[205.2636]  Player fell
+[205.2645]  Player fell
+[205.2655]  Player fell
+[205.2665]  Player fell
+[205.2675]  Player fell
+[205.2685]  Player fell
+[205.2694]  Player fell
+[205.2703]  Player fell
+[205.2713]  Player fell
+[205.7815]  shift down key was pressed
+[206.164]  space key was pressed
+[206.7498]  W key was pressed
+[207.5596]  space key was pressed
+[208.4154]  space key was pressed
+[208.4809]  W key was pressed
+[209.6285]  space key was pressed
+[210.6625]  space key was pressed
+[210.7198]  W key was pressed
+[210.912]  shift up key was pressed
+[210.98]  shift down key was pressed
+[211.2145]  space key was pressed
+[211.2809]  W key was pressed
+[211.7669]  W key was pressed
+[212.2942]  space key was pressed
+[213.3638]  space key was pressed
+[214.5335]  space key was pressed
+[215.6604]  space key was pressed
+[216.2216]  space key was pressed
+[216.5602]  space key was pressed
+[217.9536]  shift up key was pressed
+[218.1114]  shift down key was pressed
+[218.7857]  space key was pressed
+[219.7108]  space key was pressed
+[220.9463]  space key was pressed
+[221.8017]  space key was pressed
+[222.746]  space key was pressed
+[223.196]  W key was pressed
+[224.1639]  space key was pressed
+[224.953]  space key was pressed
+[225.2433]  space key was pressed
+[225.3562]  W key was pressed
+[226.0656]  shift up key was pressed
+[228.3582]  Player fell
+[228.3594]  Player fell
+[228.3604]  Player fell
+[228.3614]  Player fell
+[228.3623]  Player fell
+[228.3632]  Player fell
+[228.3641]  Player fell
+[228.365]  Player fell
+[228.3658]  Player fell
+[228.3666]  Player fell
+[228.3674]  Player fell
+[228.3682]  Player fell
+[228.369]  Player fell
+[228.3698]  Player fell
+[228.3706]  Player fell
+[229.2941]  shift down key was pressed
+[229.5979]  shift up key was pressed
+[229.7673]  shift down key was pressed
+[230.0142]  shift up key was pressed
+[237.6552]  shift down key was pressed
+[238.1156]  space key was pressed
+[238.9694]  space key was pressed
+[239.916]  space key was pressed
+[241.4245]  space key was pressed
+[241.6814]  space key was pressed
+[242.3001]  W key was pressed
+[242.7268]  space key was pressed
+[243.8094]  space key was pressed
+[244.8211]  space key was pressed
+[246.1056]  space key was pressed
+[246.7323]  space key was pressed
+[247.587]  shift up key was pressed
+[247.6893]  shift down key was pressed
+[248.1729]  space key was pressed
+[248.3299]  shift up key was pressed
+[249.5687]  shift down key was pressed
+[250.0174]  space key was pressed
+[250.7386]  space key was pressed
+[251.6829]  W key was pressed
+[252.4722]  space key was pressed
+[253.0794]  space key was pressed
+[254.4973]  space key was pressed
+[255.3731]  space key was pressed
+[256.4088]  space key was pressed
+[257.2652]  space key was pressed
+[258.5478]  space key was pressed
+[259.4457]  space key was pressed
+[261.1132]  space key was pressed
+[262.2133]  space key was pressed
+[262.7532]  shift up key was pressed
+[263.023]  W key was pressed
+[10.76473]  shift down key was pressed
+[11.28275]  space key was pressed
+[12.60504]  space key was pressed
+[12.76414]  W key was pressed
+[14.2055]  W key was pressed
+[14.49623]  shift down key was pressed
+[14.90013]  space key was pressed
+[16.61074]  space key was pressed
+[17.15064]  shift up key was pressed
+[17.30803]  W key was pressed
+[17.91553]  W key was pressed
+[18.25774]  shift down key was pressed
+[18.5451]  space key was pressed
+[18.77053]  shift up key was pressed
+[18.82645]  W key was pressed
+[19.22014]  W key was pressed
+[21.67698]  Timer Started!
+[15.74442]  shift down key was pressed
+[16.05634]  space key was pressed
+[16.37322]  shift up key was pressed
+[17.02276]  W key was pressed
+[17.76575]  W key was pressed
+[41.50659]  shift down key was pressed
+[41.93575]  shift up key was pressed
+[41.96774]  W key was pressed
+[42.19141]  W key was pressed
+[42.23777]  space key was pressed
+[42.63198]  shift down key was pressed
+[43.57693]  space key was pressed
+[45.30966]  space key was pressed
+[45.35252]  shift up key was pressed
+[45.36732]  W key was pressed
+[45.90743]  W key was pressed
+[46.65769]  W key was pressed
+[46.91874]  shift down key was pressed
+[47.55861]  space key was pressed
+[48.18798]  shift up key was pressed
+[49.11]  space key was pressed
+[51.39614]  Timer Started!
+[52.21775]  W key was pressed
+[53.83773]  shift down key was pressed
+[54.40903]  space key was pressed
+[54.96053]  W key was pressed
+[55.09969]  shift up key was pressed
+[63.49081]  shift down key was pressed
+[63.94033]  space key was pressed
+[64.14138]  shift up key was pressed
+[64.15422]  W key was pressed
+[7.169273]  W key was pressed
+[7.710406]  shift down key was pressed
+[8.046054]  space key was pressed
+[8.608047]  shift up key was pressed
+[9.556186]  W key was pressed
+[10.12739]  shift down key was pressed
+[10.50082]  space key was pressed
+[12.36669]  shift up key was pressed
+[12.36944]  space key was pressed
+[12.63597]  W key was pressed
+[12.92915]  W key was pressed
+[13.2443]  W key was pressed
+[14.3502]  shift down key was pressed
+[14.3751]  space key was pressed
+[14.3799]  W key was pressed
+[14.42729]  shift up key was pressed
+[15.24845]  W key was pressed
+[15.5867]  shift down key was pressed
+[15.94635]  space key was pressed
+[16.6453]  shift up key was pressed
+[18.4196]  space key was pressed
+[11.91138]  W key was pressed
+[12.38236]  shift down key was pressed
+[12.73215]  space key was pressed
+[12.89114]  shift up key was pressed
+[12.93332]  shift down key was pressed
+[14.84625]  space key was pressed
+[16.35388]  space key was pressed
+[16.3648]  W key was pressed
+[17.5033]  W key was pressed
+[18.24487]  shift down key was pressed
+[18.46748]  space key was pressed
+[20.47114]  space key was pressed
+[20.96648]  shift up key was pressed
+[21.44465]  W key was pressed
+[23.88108]  Timer Started!
+[25.86641]  shift down key was pressed
+[26.40111]  space key was pressed
+[28.44905]  space key was pressed
+[29.77811]  shift down key was pressed
+[30.17991]  space key was pressed
+[30.96979]  W key was pressed
+[31.19655]  W key was pressed
+[31.57835]  W key was pressed
+[32.61207]  shift down key was pressed
+[33.06064]  space key was pressed
+[33.85038]  space key was pressed
+[33.86154]  shift up key was pressed
+[34.12064]  W key was pressed
+[35.49812]  Player fell
+[35.4995]  Player fell
+[35.50047]  Player fell
+[35.50137]  Player fell
+[35.50225]  Player fell
+[38.69972]  shift down key was pressed
+[39.20573]  space key was pressed
+[40.68811]  space key was pressed
+[41.18577]  shift up key was pressed
+[41.18895]  W key was pressed
+[41.84016]  W key was pressed
+[42.29871]  shift down key was pressed
+[42.67037]  space key was pressed
+[44.60365]  space key was pressed
+[44.80974]  shift up key was pressed
+[45.44064]  W key was pressed
+[45.97988]  shift down key was pressed
+[46.34098]  space key was pressed
+[46.61176]  shift up key was pressed
+[46.9012]  W key was pressed
+[48.75681]  Timer Started!
+[56.75035]  Timer Started!
