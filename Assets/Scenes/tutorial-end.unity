@@ -704,8 +704,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'You will be given a five levels to complete. At the end of each level,
-    landing on the green platform will teleport you to the start of the next level.
+  m_text: 'You will be given five levels to complete. At the end of each level, landing
+    on the green platform will teleport you to the start of the next level.
 
 
     You
