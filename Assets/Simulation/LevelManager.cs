@@ -17,6 +17,7 @@ public class LevelManager : MonoBehaviour
     public int numberOfLevels = 1;
     public int activeLevel = 0;
     public List<GameObject> levels = new(); 
+
     void Start()
     {
         var fitter = GetComponent<PathFitter>();
@@ -56,7 +57,6 @@ public class LevelManager : MonoBehaviour
 
     void Update() 
     {
-        // Calling InitializeLevels causes funk
     }
 
     
