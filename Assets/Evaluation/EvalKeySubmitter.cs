@@ -19,6 +19,7 @@ namespace Evaluation
             try
             {
                 Evaluator.SetEvalKey(input.text);
+                Logger.LogByEvalKey(Evaluator.Key, "Game started");
                 SceneLoader.BruteForceSceneLoad("tutorial-ready");
                 Evaluator.Key.Print();
             }
